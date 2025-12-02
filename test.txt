@@ -1,0 +1,8 @@
+{"textures":
+    [{"image":"0001.png","format":"RGBA8888","size":{"w":255,"h":284},"scale":1,
+        "frames":[
+          {"filename":"Normal/Hurt/Anim/2/0000","rotated":false,"trimmed":true,"sourceSize":{"w":40,"h":56},
+            "spriteSourceSize":{"x":4,"y":4,"w":28,"h":32},"frame":{"x":1,"y":1,"w":28,"h":32}},
+          {"filename":"Normal/Hurt/Anim/2/0001","rotated":false,"trimmed":true,"sourceSize":{"w":40,"h":56},
+          "spriteSourceSize":{"x":3,"y":4,"w":28,"h":32},"frame":{"x":1,"y":1,"w":28,"h":32}},
+          {"filename":"Normal/Hurt/Anim/6/0000","r
