@@ -1,0 +1,5 @@
+C:\Users\tjkin\OneDrive\Documents\GitHub\Pokechess\src\game\Main.java
+C:\Users\tjkin\OneDrive\Documents\GitHub\Pokechess\src\game\engine\GameEngine.java
+C:\Users\tjkin\OneDrive\Documents\GitHub\Pokechess\src\game\scenes\BattleScene.java
+C:\Users\tjkin\OneDrive\Documents\GitHub\Pokechess\src\game\view\CharacterModel.java
+C:\Users\tjkin\OneDrive\Documents\GitHub\Pokechess\src\game\view\JSONImporter.java
