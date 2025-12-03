@@ -1,6 +1,7 @@
 package game.scenes;
 import javax.swing.*;
 
+import game.engine.Scene;
 import game.view.CharacterModel;
 import game.view.JSONImporter;
 
@@ -15,7 +16,7 @@ import java.util.List;
 
 
 
-public class BattleScene extends JPanel{
+public class BattleScene extends Scene{
   private BufferedImage background;
   private ArrayList<CharacterModel> characters = new ArrayList<>();
   private JSONImporter jsonImporter;
