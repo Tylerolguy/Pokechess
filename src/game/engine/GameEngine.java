@@ -23,13 +23,8 @@ public class GameEngine implements Runnable {
     public GameEngine(JFrame frame) {
         this.frame = frame;
         this.currentScene = new BattleScene();
-        this.frame.add(currentScene);
-        this.frame.pack();
+        this.changeScene(currentScene);
 
-
-        
-
-    
     }
 
     public void start() {
@@ -40,18 +35,20 @@ public class GameEngine implements Runnable {
     public void run() {
         while (true) {
           this.currentScene.repaint();
-           try { Thread.sleep(1000 / 60); } catch (Exception ignored) {}
+           try { Thread.sleep(16); } catch (Exception ignored) {}
         }
     }
 
-    
-    // public void repaint() {
-    //     this.currentScene.paint(frame.getGraphics());
-        
-    // }
 
     public void input (KeyEvent e) {
         this.currentScene.input(e);
+    }
+
+    private void changeScene(Scene newScene) {
+        this.frame.remove(currentScene);
+        this.currentScene = newScene;
+        this.frame.add(currentScene);
+        this.frame.pack();
     }
 
 
