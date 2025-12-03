@@ -8,8 +8,6 @@ import org.json.JSONObject;
 import org.json.JSONArray;
 
 
-
-
 public class JSONImporter {
 
 
@@ -36,6 +34,8 @@ public class JSONImporter {
             JSONObject f = frames.getJSONObject(frameNumber).getJSONObject("frame");
             String[] filenames = frames.getJSONObject(frameNumber).getString("filename").split("/");
 
+            
+
 
             int x = f.getInt("x");
             int y = f.getInt("y");
@@ -47,17 +47,23 @@ public class JSONImporter {
         
             // Skip if already seen
             if (!seen.contains(signature) && filenames[0].equals("Normal")) {
-                //System.out.println(filenames[1]);
+
                 
                 seen.add(signature);
+                if (filenames[1].equals("Idle")) {
+                    result.add(0, sheet.getSubimage(x, y, w, h));
+                }
+                else {
+                    result.add(sheet.getSubimage(x, y, w, h));
+                }
 
-                result.add(sheet.getSubimage(x, y, w, h));
+                
             }
 
 
             
         }
-        System.out.print(result.size());
+
         return result;
     }
 

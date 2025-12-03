@@ -3,13 +3,8 @@ import javax.swing.*;
 
 import game.scenes.BattleScene;
 
-import java.awt.*;
-import java.awt.image.BufferedImage;
-import javax.imageio.ImageIO;
 import java.awt.event.*;
-import java.io.*;
-import java.util.*;
-import java.util.List;
+
 
 
 
@@ -34,8 +29,10 @@ public class GameEngine implements Runnable {
 
     public void run() {
         while (true) {
-          this.currentScene.repaint();
-           try { Thread.sleep(16); } catch (Exception ignored) {}
+            this.currentScene.update();  
+            this.currentScene.repaint();
+
+            try { Thread.sleep(16); } catch (Exception ignored) {}
         }
     }
 

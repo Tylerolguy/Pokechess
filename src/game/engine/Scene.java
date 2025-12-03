@@ -2,7 +2,6 @@ package game.engine;
 
 import java.awt.Graphics;
 import java.awt.event.KeyEvent;
-import java.awt.image.BufferedImage;
 
 import javax.swing.JPanel;
 
@@ -18,6 +17,8 @@ public abstract class Scene extends JPanel{
 
     public abstract void input(KeyEvent e);
 
+    public abstract void update();
 
-    
+
+
 }
