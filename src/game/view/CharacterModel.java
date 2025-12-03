@@ -1,11 +1,6 @@
 package game.view;
-import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import javax.imageio.ImageIO;
-import java.awt.event.*;
-import java.io.*;
-import java.util.*;
 import java.util.List;
 
 
@@ -13,7 +8,7 @@ public class CharacterModel{
         private int x, y;
         private List<BufferedImage> frames;
         private int currentFrame = 0;
-        private static final int GRID_SIZE = 32;
+        // private static final int GRID_SIZE = 32;
 
         public CharacterModel(int x, int y, List<BufferedImage> frames) {
             this.x = x;

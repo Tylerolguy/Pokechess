@@ -4,14 +4,8 @@ package game;
 import javax.swing.*;
 
 import game.engine.GameEngine;
-
-import java.awt.*;
-import java.awt.image.BufferedImage;
-import javax.imageio.ImageIO;
 import java.awt.event.*;
-import java.io.*;
-import java.util.*;
-import java.util.List;
+
 
 public class Main extends JPanel {
 
@@ -36,18 +30,18 @@ public class Main extends JPanel {
         frame.requestFocusInWindow();
 
 
-        GameEngine engine = new GameEngine(frame);
+        gameEngine = new GameEngine(frame);
         // Add KeyListener directly to the JFrame
         frame.addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
-                engine.input(e);
+                gameEngine.input(e);
             }
         });
 
         // Start Game Engine
         
-        engine.start();
+        gameEngine.start();
     }
     
 
