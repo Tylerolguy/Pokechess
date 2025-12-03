@@ -3,6 +3,7 @@ package game.gamedata;
 import game.view.CharacterModel;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.util.List;
 
 public class PokemonData {
   public String name;
@@ -18,6 +19,7 @@ public class PokemonData {
   public PokemonData(String name, int hp, int x, int y, int speedStat, String trainer, CharacterModel model) {
     this.name = name;
     this.hp = hp;
+    this.maxHP = hp;
     this.x = x;
     this.y = y;
     this.speedStat = speedStat;
@@ -42,6 +44,7 @@ public class PokemonData {
 
   public void drawPokemon(Graphics g) {
     this.model.draw(g);
+    this.model.drawHealthBar(g, this.x, this.y, this.hp, this.maxHP);
   }
 
   public void updateSpeed() {
@@ -54,6 +57,10 @@ public class PokemonData {
 
   public String toString() {
     return this.name + ":" + this.currentSpeed;
+  }
+
+  public void takeDamage(int damage) {
+    this.hp -= damage;
   }
 
 }

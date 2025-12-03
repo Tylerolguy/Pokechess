@@ -44,7 +44,7 @@ public class BattleScene extends Scene{
         background = ImageIO.read(new File("src/game/assets/applewoods.png"));
 
         // Load characters from JSON
-        characters.add(new CharacterModel(150, 150, jsonImporter.loadFromJSON("src/game/assets/pokemonImages/0405.png", "src/game/assets/pokemonImages/0405.json")));
+        characters.add(new CharacterModel(150, 150, jsonImporter.loadFromJSON("src/game/assets/pokemonImages/0151.png", "src/game/assets/pokemonImages/0151.json")));
         characters.add(new CharacterModel(150 + GRID_SIZE, 150, jsonImporter.loadFromJSON("src/game/assets/pokemonImages/0004.png", "src/game/assets/pokemonImages/0004.json")));
         // characters.add(new CharacterModel(300, 300, jsonImporter.loadFromJSON("src/game/assets/pokemonImages/0007.png", "src/game/assets/pokemonImages/0007.json")));
         
@@ -53,16 +53,16 @@ public class BattleScene extends Scene{
       } catch (Exception e) {
         e.printStackTrace();
       }
-      for (int i = 0; i < 5; i++) {
+      for (int i = 0; i < 44; i++) {
         this.characters.get(0).nextFrame();
       }
 
-      PokemonData luxray = new PokemonData("Luxray", 10, 150, 150, 20, "player", characters.get(0)); 
+      PokemonData mew = new PokemonData("Mew", 10, 150, 150, 20, "player", characters.get(0)); 
       PokemonData charmander = new PokemonData("Charmander", 10, 150 + GRID_SIZE, 150, 20, "npc", characters.get(1)); 
-      this.listOfPokemons.add( luxray);
+      this.listOfPokemons.add( mew);
       this.listOfPokemons.add(charmander);
 
-      this.currentPokemon = luxray;
+      this.currentPokemon = mew;
     
     
     }
@@ -81,8 +81,8 @@ public class BattleScene extends Scene{
 
       //currentPokemon.drawPokemon(g);
 
-      for (CharacterModel c : this.characters) {
-        c.draw(g);
+      for (PokemonData p: this.listOfPokemons) {
+        p.drawPokemon(g);
       }
 
     }
@@ -123,6 +123,7 @@ public class BattleScene extends Scene{
 
     public void endTurn() {
       this.playersTurn = false;
+      this.currentPokemon.takeDamage(1);
 
     }
 
