@@ -18,7 +18,6 @@ public abstract class Scene extends JPanel{
 
     public abstract void input(KeyEvent e);
 
+
     
-
-
 }

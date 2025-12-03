@@ -35,6 +35,7 @@ public class Main extends JPanel {
         frame.setFocusable(true);
         frame.requestFocusInWindow();
 
+
         GameEngine engine = new GameEngine(frame);
         // Add KeyListener directly to the JFrame
         frame.addKeyListener(new KeyAdapter() {

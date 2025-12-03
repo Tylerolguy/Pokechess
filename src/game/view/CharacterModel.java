@@ -19,6 +19,7 @@ public class CharacterModel{
             this.x = x;
             this.y = y;
             this.frames = frames;
+            
         }
 
         public void nextFrame() {
@@ -38,6 +39,10 @@ public class CharacterModel{
             this.y += y;
 
 
+        }
+
+        public BufferedImage getFrame() {
+            return this.frames.get(currentFrame);
         }
     }
 

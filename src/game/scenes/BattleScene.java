@@ -25,6 +25,10 @@ public class BattleScene extends Scene{
 
     public BattleScene() {
       jsonImporter = new JSONImporter();
+      setDoubleBuffered(false);
+      setPreferredSize(new Dimension(807, 630));
+      
+
 
 
       try {
@@ -32,9 +36,9 @@ public class BattleScene extends Scene{
         background = ImageIO.read(new File("src/game/assets/applewoods.png"));
 
         // Load characters from JSON
-        characters.add(new CharacterModel(100, 100, jsonImporter.loadFromJSON("src/game/assets/pokemonImages/0007.png", "src/game/assets/pokemonImages/0007.json")));
-        //characters.add(new Character(200, 200, loadFromJSON("src/assets/pokemonImages/0004.png", "src/assets/pokemonImages/0004.json")));
-        //characters.add(new Character(300, 300, loadFromJSON("src/assets/pokemonImages/0007.png", "src/assets/pokemonImages/0007.json")));
+        characters.add(new CharacterModel(150, 150, jsonImporter.loadFromJSON("src/game/assets/pokemonImages/0001.png", "src/game/assets/pokemonImages/0001.json")));
+        characters.add(new CharacterModel(200, 200, jsonImporter.loadFromJSON("src/game/assets/pokemonImages/0004.png", "src/game/assets/pokemonImages/0004.json")));
+        //characters.add(new CharacterModel(300, 300, jsonImporter.loadFromJSON("src/game/assets/pokemonImages/0007.png", "src/game/assets/pokemonImages/0007.json")));
 
       } catch (Exception e) {
         e.printStackTrace();
@@ -53,19 +57,20 @@ public class BattleScene extends Scene{
       g.drawImage(background, 0, 0, 807, 630, null);
 
       for (CharacterModel c : characters) {
-        c.draw(g);
+        g.drawImage(c.getFrame(), 100, 100,  null);
       }
 
     }
 
 
     public void input(KeyEvent e) {
-      System.out.println("herre");
       switch (e.getKeyCode()) {
             case KeyEvent.VK_SPACE: this.characters.get(0).nextFrame(); break;
         }
 
     }
+
+
   
 
 }
