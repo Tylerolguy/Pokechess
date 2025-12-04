@@ -9,15 +9,16 @@ import org.json.JSONArray;
 
 
 public class JSONImporter {
-
+    private final String location = "src/game/assets/pokemonImages/";
 
 
   // Load sprites using JSON atlas
-    public List<BufferedImage> loadFromJSON(String imageFile, String jsonFile) throws Exception {
-        BufferedImage sheet = ImageIO.read(new File(imageFile));
+    public List<BufferedImage> loadFromJSON(String imageFile) throws Exception {
+        
+        BufferedImage sheet = ImageIO.read(new File(location + imageFile + ".png"));
 
         String jsonText = new String(java.nio.file.Files.readAllBytes(
-                java.nio.file.Paths.get(jsonFile)
+                java.nio.file.Paths.get(location + imageFile + ".json")
         ));
 
         JSONObject root = new JSONObject(jsonText);

@@ -9,11 +9,11 @@ public class CharacterModel{
         private List<BufferedImage> frames;
         private int currentFrame = 0;
         private final int GRID_SIZE = 32;
-        private final String location = "src/game/assets/pokemonImages/";
+
 
         public CharacterModel(int x, int y, List<BufferedImage> frames) {
-            this.x = x;
-            this.y = y;
+            this.x = x * GRID_SIZE + 150;
+            this.y = y * GRID_SIZE + 150;
             this.frames = frames;
             
         }
@@ -46,7 +46,10 @@ public class CharacterModel{
         public void drawHealthBar(Graphics g, int x, int y, int currentHp, int maxHp) {
             int barWidth = GRID_SIZE - 4;         // width matches your grid
             int barHeight = 4;               // fixed height
-            int padding = 2;                 // optional padding above sprite
+            int padding = 2; // optional padding above sprite
+
+            x = x * GRID_SIZE + 150;       
+            y = y * GRID_SIZE + 150;          
 
             // Calculate the width of the filled portion based on HP
             int filledWidth = (int) ((currentHp / (float) maxHp) * barWidth);

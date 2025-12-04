@@ -3,8 +3,7 @@ package game.scenes;
 import game.engine.Scene;
 import game.gamedata.PokemonData;
 import game.view.AbilityModel;
-import game.view.CharacterModel;
-import game.view.JSONImporter;
+import game.view.SelectorModel;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -19,24 +18,24 @@ import java.util.*;
 
 public class BattleScene extends Scene{
   private BufferedImage background;
-  private ArrayList<CharacterModel> characters = new ArrayList<>();
-  private JSONImporter jsonImporter;
   private PokemonData currentPokemon;
   private ArrayList<PokemonData> listOfPokemons;
-  private static final int GRID_SIZE = 32;
   private boolean playersTurn;
   private ArrayList<Integer> indexOfPokemonToAct;
   private PokemonData[][] map;
   private AbilityModel abilityModel;
+  private SelectorModel selectorModel;
+  private int frameNumber = 0;
+  private boolean frameSwitch = true;
 
 
     public BattleScene() {
-      jsonImporter = new JSONImporter();
       setDoubleBuffered(false);
       setPreferredSize(new Dimension(807, 630));
       this.listOfPokemons = new ArrayList<PokemonData>();
       this.indexOfPokemonToAct = new ArrayList<Integer>();
       this.abilityModel = new AbilityModel();
+      this.selectorModel = new SelectorModel();
       
       playersTurn = false;
 
@@ -59,22 +58,13 @@ public class BattleScene extends Scene{
         // Load background
         background = ImageIO.read(new File("src/game/assets/applewoods.png"));
 
-        // Load characters from JSON
-        characters.add(new CharacterModel(150, 150, jsonImporter.loadFromJSON("src/game/assets/pokemonImages/0151.png", "src/game/assets/pokemonImages/0151.json")));
-        characters.add(new CharacterModel(150 + GRID_SIZE, 150, jsonImporter.loadFromJSON("src/game/assets/pokemonImages/0004.png", "src/game/assets/pokemonImages/0004.json")));
-        // characters.add(new CharacterModel(300, 300, jsonImporter.loadFromJSON("src/game/assets/pokemonImages/0007.png", "src/game/assets/pokemonImages/0007.json")));
-        
-
 
       } catch (Exception e) {
         e.printStackTrace();
       }
-      for (int i = 0; i < 44; i++) {
-        this.characters.get(0).nextFrame();
-      }
 
-      PokemonData mew = new PokemonData("Mew", 10, 0, 0, 20, "player", characters.get(0)); 
-      PokemonData charmander = new PokemonData("Charmander", 10, 1, 0, 20, "npc", characters.get(1)); 
+      PokemonData mew = new PokemonData("Mew", 10, 0, 0, 20, "player", "0151"); 
+      PokemonData charmander = new PokemonData("Charmander", 10, 1, 0, 20, "npc", "0004"); 
       this.listOfPokemons.add( mew);
       this.listOfPokemons.add(charmander);
 
@@ -86,9 +76,9 @@ public class BattleScene extends Scene{
     }
 
       
-      public void paint(Graphics g) {
-        this.paintComponent(g);
-      }
+    public void paint(Graphics g) {
+      this.paintComponent(g);
+    }
 
 
     @Override
@@ -97,18 +87,27 @@ public class BattleScene extends Scene{
 
       g.drawImage(background, 0, 0, 807, 630, null);
 
+      if (this.currentPokemon != null) {
+        this.abilityModel.draw(g, this.currentPokemon);
+
+        if (frameSwitch) {
+          this.selectorModel.draw(g, this.currentPokemon.x, this.currentPokemon.y);
+        }
+      }
+      
 
       for (PokemonData p: this.listOfPokemons) {
         p.drawPokemon(g);
       }
 
-      if (this.currentPokemon != null) {
-        this.abilityModel.draw(g, this.currentPokemon.name);
-      }
+
 
     }
 
     public void update() {
+      frameNumber = (frameNumber + 1) % 32;
+      if (frameNumber == 0) frameSwitch = !frameSwitch;
+
       if (!this.playersTurn && this.indexOfPokemonToAct.isEmpty()) {
         for (PokemonData p : this.listOfPokemons) {
           p.updateSpeed();

@@ -1,9 +1,12 @@
 package game.gamedata;
 
 import game.view.CharacterModel;
+import game.view.JSONImporter;
+
 import java.awt.*;
 
 public class PokemonData {
+  private JSONImporter jsonImporter;
   public String name;
   private int hp;
   private int maxHP;
@@ -14,7 +17,8 @@ public class PokemonData {
   public String trainer;
   private CharacterModel model;
 
-  public PokemonData(String name, int hp, int x, int y, int speedStat, String trainer, CharacterModel model) {
+  public PokemonData(String name, int hp, int x, int y, int speedStat, String trainer, String id) {
+    this.jsonImporter = new JSONImporter();
     this.name = name;
     this.hp = hp;
     this.maxHP = hp;
@@ -23,7 +27,12 @@ public class PokemonData {
     this.speedStat = speedStat;
     this.currentSpeed = 0;
     this.trainer = trainer;
-    this.model = model;
+    try {
+      this.model = new CharacterModel(this.x, this.y, this.jsonImporter.loadFromJSON(id));
+    } catch (Exception e) {
+      System.out.println("could not find file" + id);
+      e.printStackTrace();
+    }
   }
 
   public void move(int x, int y) {

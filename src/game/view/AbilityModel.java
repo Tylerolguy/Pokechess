@@ -3,26 +3,32 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
 
 import javax.imageio.ImageIO;
+
+import game.gamedata.PokemonData;
 
 
 public class AbilityModel {
 
-  public void draw(Graphics g, String name) {
+  public void draw(Graphics g, PokemonData pokemon) {
     String location = "src/game/assets/icons/";
-    String pokemonIconLocation = location + name + "Icon.png" ;
-    String iconHolderLocation = location + "iconHolder.png";
-    BufferedImage pokemonIcon;
+    String pokemonIconLocation = location + pokemon.name + "Icon.png" ;
+    BufferedImage currentIcon;
 
 
     try {
-      pokemonIcon = ImageIO.read(new File(iconHolderLocation));
-      g.drawImage(pokemonIcon, 150, 500, 500, 100, null);
+      currentIcon = ImageIO.read(new File(location + "iconHolder.png"));
+      g.drawImage(currentIcon, 150, 500, 500, 100, null);
 
-      pokemonIcon = ImageIO.read(new File(pokemonIconLocation));
-      g.drawImage(pokemonIcon, 175, 520, 50, 50, null);
+      currentIcon = ImageIO.read(new File(pokemonIconLocation));
+      g.drawImage(currentIcon, 175, 520, 50, 50, null);
+
+      currentIcon = ImageIO.read(new File(location + "bootIcon.png"));
+      g.drawImage(currentIcon, 255, 520, 50, 50, null);
+      g.setFont(new Font("Arial", Font.BOLD, 24));
+      g.drawString("M", 315, 538);
+      g.drawString("2", 319, 566);
 
 
 
