@@ -159,6 +159,7 @@ public class BattleScene extends Scene{
 
     public void endTurn() {
       this.playersTurn = false;
+      this.currentPokemon.endTurn();
 
     }
 
@@ -195,6 +196,7 @@ public class BattleScene extends Scene{
     if (!this.movePokemon(1, 0)) {
       this.movePokemon(0, 1);
     }
+    this.currentPokemon.endTurn();
 
 
   }
@@ -206,7 +208,8 @@ public class BattleScene extends Scene{
     int newY = oldY + y;
 
     //checks if the new location is in bound
-    if (!(newX < 0 || oldX + x > 15 || oldY + y < 0 || oldY + y > 9) && map[newX][newY] == null) {
+    if (!(newX < 0 || oldX + x > 15 || oldY + y < 0 || oldY + y > 9) && map[newX][newY] == null 
+        && this.currentPokemon.canMove()) {
         map[oldX][oldY] = null;
         this.currentPokemon.move(x, y);
         map[oldX + x][oldY + y] = this.currentPokemon;

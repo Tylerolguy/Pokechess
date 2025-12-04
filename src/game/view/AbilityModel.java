@@ -6,13 +6,12 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
-import game.gamedata.PokemonData;
-
 
 public class AbilityModel {
   private String name;
   private int hp;
   private int maxHP;
+  private int movementPoints;
 
   public AbilityModel(String name, int hp, int maxHP) {
     this.name = name;
@@ -37,7 +36,7 @@ public class AbilityModel {
       g.drawImage(currentIcon, 230, 520, 50, 50, null);
       g.setFont(new Font("Arial", Font.BOLD, 24));
       g.drawString("M", 290, 538);
-      g.drawString("2", 294, 566);
+      g.drawString(String.valueOf(this.movementPoints), 294, 566);
 
       //place holder for move 1
       //currentIcon = ImageIO.read(new File(location + "bootIcon.png"));
@@ -70,7 +69,7 @@ public class AbilityModel {
       g.setColor(Color.BLACK);
       g.drawRect(150, 580, 240, 20);
 
-      g.drawString("  5/10 ", 255, 595);
+      g.drawString("  10/10 ", 255, 595);
 
 
 
@@ -82,6 +81,10 @@ public class AbilityModel {
     
         
 
+  }
+
+  public void updateMovementPoints(int newPointValue) {
+    this.movementPoints = newPointValue;
   }
   
 }

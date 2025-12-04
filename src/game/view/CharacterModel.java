@@ -43,28 +43,28 @@ public class CharacterModel{
         }
 
 
-        public void drawHealthBar(Graphics g, int x, int y, int currentHp, int maxHp) {
+        public void drawHealthBar(Graphics g, int currentHp, int maxHp) {
             int barWidth = GRID_SIZE - 4;         // width matches your grid
             int barHeight = 4;               // fixed height
             int padding = 2; // optional padding above sprite
 
-            x = x * GRID_SIZE + 150;       
-            y = y * GRID_SIZE + 150;          
+            int nx = this.x;       
+            int ny = this.y;          
 
             // Calculate the width of the filled portion based on HP
             int filledWidth = (int) ((currentHp / (float) maxHp) * barWidth);
 
             // Draw background (empty bar)
             g.setColor(Color.RED);
-            g.fillRect(x - 2, y - barHeight - padding, barWidth, barHeight);
+            g.fillRect(nx - 2, ny - barHeight - padding, barWidth, barHeight);
 
             // Draw foreground (filled bar)
             g.setColor(Color.GREEN);
-            g.fillRect(x - 2, y - barHeight - padding, filledWidth, barHeight);
+            g.fillRect(nx - 2, ny - barHeight - padding, filledWidth, barHeight);
 
             // Optional: draw borders
             g.setColor(Color.BLACK);
-            g.drawRect(x - 2, y - barHeight - padding, barWidth, barHeight);
+            g.drawRect(nx - 2, ny - barHeight - padding, barWidth, barHeight);
         }
     }
 
