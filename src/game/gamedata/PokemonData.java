@@ -1,5 +1,6 @@
 package game.gamedata;
 
+import game.view.AbilityModel;
 import game.view.CharacterModel;
 import game.view.JSONImporter;
 
@@ -15,7 +16,8 @@ public class PokemonData {
   public int x;
   public int y;
   public String trainer;
-  private CharacterModel model;
+  private CharacterModel characterModel;
+  private AbilityModel abilityModel;
 
   public PokemonData(String name, int hp, int x, int y, int speedStat, String trainer, String id) {
     this.jsonImporter = new JSONImporter();
@@ -27,8 +29,9 @@ public class PokemonData {
     this.speedStat = speedStat;
     this.currentSpeed = 0;
     this.trainer = trainer;
+    this.abilityModel = new AbilityModel(name, hp, maxHP);
     try {
-      this.model = new CharacterModel(this.x, this.y, this.jsonImporter.loadFromJSON(id));
+      this.characterModel = new CharacterModel(this.x, this.y, this.jsonImporter.loadFromJSON(id));
     } catch (Exception e) {
       System.out.println("could not find file" + id);
       e.printStackTrace();
@@ -39,13 +42,13 @@ public class PokemonData {
 
         this.x += x;
         this.y += y;
-        this.model.move(x, y);
+        this.characterModel.move(x, y);
 
   }
 
   public void drawPokemon(Graphics g) {
-    this.model.draw(g);
-    this.model.drawHealthBar(g, this.x, this.y, this.hp, this.maxHP);
+    this.characterModel.draw(g);
+    this.characterModel.drawHealthBar(g, this.x, this.y, this.hp, this.maxHP);
   }
 
   public void updateSpeed() {
@@ -62,6 +65,12 @@ public class PokemonData {
 
   public void takeDamage(int damage) {
     this.hp -= damage;
+  }
+
+
+  public void drawAbilities(Graphics g) {
+    this.abilityModel.draw(g);
+
   }
 
 

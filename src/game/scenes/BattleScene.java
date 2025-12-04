@@ -2,7 +2,6 @@ package game.scenes;
 
 import game.engine.Scene;
 import game.gamedata.PokemonData;
-import game.view.AbilityModel;
 import game.view.SelectorModel;
 
 import java.awt.*;
@@ -23,18 +22,23 @@ public class BattleScene extends Scene{
   private boolean playersTurn;
   private ArrayList<Integer> indexOfPokemonToAct;
   private PokemonData[][] map;
-  private AbilityModel abilityModel;
   private SelectorModel selectorModel;
   private int frameNumber = 0;
   private boolean frameSwitch = true;
 
+  private enum selectionState {
+    MOVING,
+    PHYSICALATTACK,
+    SPECIALATTACK,
+    WAITING
+  }
+  private selectionState state = selectionState.WAITING;
+
 
     public BattleScene() {
-      setDoubleBuffered(false);
       setPreferredSize(new Dimension(807, 630));
       this.listOfPokemons = new ArrayList<PokemonData>();
       this.indexOfPokemonToAct = new ArrayList<Integer>();
-      this.abilityModel = new AbilityModel();
       this.selectorModel = new SelectorModel();
       
       playersTurn = false;
@@ -88,7 +92,7 @@ public class BattleScene extends Scene{
       g.drawImage(background, 0, 0, 807, 630, null);
 
       if (this.currentPokemon != null) {
-        this.abilityModel.draw(g, this.currentPokemon);
+        this.currentPokemon.drawAbilities(g);
 
         if (frameSwitch) {
           this.selectorModel.draw(g, this.currentPokemon.x, this.currentPokemon.y);
@@ -133,14 +137,24 @@ public class BattleScene extends Scene{
       if (playersTurn) {
         switch (e.getKeyCode()) {
               case KeyEvent.VK_SPACE: this.endTurn(); break;
-              case KeyEvent.VK_W: this.movePokemon(0, -1); break; //UP
-              case KeyEvent.VK_S: this.movePokemon(0, 1); break; //DOWN
-              case KeyEvent.VK_A: this.movePokemon(-1, 0); break; //LEFT
-              case KeyEvent.VK_D: this.movePokemon(1, 0); break; //RIGHT
+              case KeyEvent.VK_M: state = selectionState.MOVING; break;
+              case KeyEvent.VK_Q: state = selectionState.PHYSICALATTACK; break;
+              // case KeyEvent.VK_W: this.movePokemon(0, -1); break; //UP
+              // case KeyEvent.VK_S: this.movePokemon(0, 1); break; //DOWN
+              // case KeyEvent.VK_A: this.movePokemon(-1, 0); break; //LEFT
+              // case KeyEvent.VK_D: this.movePokemon(1, 0); break; //RIGHT
 
           }
+        if (state == selectionState.MOVING) {
+          switch (e.getKeyCode()) {
+            case KeyEvent.VK_W: this.movePokemon(0, -1); break; //UP
+            case KeyEvent.VK_S: this.movePokemon(0, 1); break; //DOWN
+            case KeyEvent.VK_A: this.movePokemon(-1, 0); break; //LEFT
+            case KeyEvent.VK_D: this.movePokemon(1, 0); break; //RIGHT
+        }
       }
-
+      
+    }
     }
 
     public void endTurn() {
@@ -177,6 +191,7 @@ public class BattleScene extends Scene{
     }
 
   private void npcMove() {
+    state = selectionState.WAITING;
     if (!this.movePokemon(1, 0)) {
       this.movePokemon(0, 1);
     }
