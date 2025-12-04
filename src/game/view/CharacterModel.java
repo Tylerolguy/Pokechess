@@ -9,6 +9,7 @@ public class CharacterModel{
         private List<BufferedImage> frames;
         private int currentFrame = 0;
         private final int GRID_SIZE = 32;
+        private final String location = "src/game/assets/pokemonImages/";
 
         public CharacterModel(int x, int y, List<BufferedImage> frames) {
             this.x = x;
@@ -31,8 +32,8 @@ public class CharacterModel{
         }
 
         public void move(int x, int y) {
-            this.x += x;
-            this.y += y;
+            this.x += x * GRID_SIZE;
+            this.y += y * GRID_SIZE;
 
 
         }

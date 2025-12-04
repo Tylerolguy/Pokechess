@@ -2,8 +2,6 @@ package game.gamedata;
 
 import game.view.CharacterModel;
 import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.util.List;
 
 public class PokemonData {
   public String name;
@@ -11,8 +9,8 @@ public class PokemonData {
   private int maxHP;
   private int speedStat;
   public int currentSpeed;
-  private int x;
-  private int y;
+  public int x;
+  public int y;
   public String trainer;
   private CharacterModel model;
 
@@ -30,16 +28,10 @@ public class PokemonData {
 
   public void move(int x, int y) {
 
-
-    if (!(this.x + x < 150 || this.x + x > 630 
-      || this.y + y < 120 || this.y + y > 460)) {
         this.x += x;
         this.y += y;
         this.model.move(x, y);
-    }
 
-
-    
   }
 
   public void drawPokemon(Graphics g) {
@@ -62,5 +54,6 @@ public class PokemonData {
   public void takeDamage(int damage) {
     this.hp -= damage;
   }
+
 
 }

@@ -2,6 +2,7 @@ package game.scenes;
 
 import game.engine.Scene;
 import game.gamedata.PokemonData;
+import game.view.AbilityModel;
 import game.view.CharacterModel;
 import game.view.JSONImporter;
 
@@ -25,6 +26,8 @@ public class BattleScene extends Scene{
   private static final int GRID_SIZE = 32;
   private boolean playersTurn;
   private ArrayList<Integer> indexOfPokemonToAct;
+  private PokemonData[][] map;
+  private AbilityModel abilityModel;
 
 
     public BattleScene() {
@@ -33,8 +36,21 @@ public class BattleScene extends Scene{
       setPreferredSize(new Dimension(807, 630));
       this.listOfPokemons = new ArrayList<PokemonData>();
       this.indexOfPokemonToAct = new ArrayList<Integer>();
+      this.abilityModel = new AbilityModel();
       
       playersTurn = false;
+
+      map = new PokemonData[16][10];
+
+      for (int i = 0; i < 15; i++) {
+        for (int j = 0; j < 10; j++) {
+          map[i][j] = null;
+
+        }
+      }
+
+
+      
       
 
 
@@ -57,12 +73,14 @@ public class BattleScene extends Scene{
         this.characters.get(0).nextFrame();
       }
 
-      PokemonData mew = new PokemonData("Mew", 10, 150, 150, 20, "player", characters.get(0)); 
-      PokemonData charmander = new PokemonData("Charmander", 10, 150 + GRID_SIZE, 150, 20, "npc", characters.get(1)); 
+      PokemonData mew = new PokemonData("Mew", 10, 0, 0, 20, "player", characters.get(0)); 
+      PokemonData charmander = new PokemonData("Charmander", 10, 1, 0, 20, "npc", characters.get(1)); 
       this.listOfPokemons.add( mew);
       this.listOfPokemons.add(charmander);
 
-      this.currentPokemon = mew;
+      this.map[0][0] = mew;
+      this.map[1][0] = charmander;
+
     
     
     }
@@ -79,10 +97,13 @@ public class BattleScene extends Scene{
 
       g.drawImage(background, 0, 0, 807, 630, null);
 
-      //currentPokemon.drawPokemon(g);
 
       for (PokemonData p: this.listOfPokemons) {
         p.drawPokemon(g);
+      }
+
+      if (this.currentPokemon != null) {
+        this.abilityModel.draw(g, this.currentPokemon.name);
       }
 
     }
@@ -104,6 +125,8 @@ public class BattleScene extends Scene{
       if (!this.indexOfPokemonToAct.isEmpty()) {
         this.takeTurns();
       }
+
+
     }
 
 
@@ -111,10 +134,10 @@ public class BattleScene extends Scene{
       if (playersTurn) {
         switch (e.getKeyCode()) {
               case KeyEvent.VK_SPACE: this.endTurn(); break;
-              case KeyEvent.VK_W: this.currentPokemon.move(0, -GRID_SIZE); break; //UP
-              case KeyEvent.VK_S: this.currentPokemon.move(0, GRID_SIZE); break; //DOWN
-              case KeyEvent.VK_A: this.currentPokemon.move(-GRID_SIZE, 0); break; //LEFT
-              case KeyEvent.VK_D: this.currentPokemon.move(GRID_SIZE, 0); break; //RIGHT
+              case KeyEvent.VK_W: this.movePokemon(0, -1); break; //UP
+              case KeyEvent.VK_S: this.movePokemon(0, 1); break; //DOWN
+              case KeyEvent.VK_A: this.movePokemon(-1, 0); break; //LEFT
+              case KeyEvent.VK_D: this.movePokemon(1, 0); break; //RIGHT
 
           }
       }
@@ -123,7 +146,6 @@ public class BattleScene extends Scene{
 
     public void endTurn() {
       this.playersTurn = false;
-      this.currentPokemon.takeDamage(1);
 
     }
 
@@ -156,13 +178,33 @@ public class BattleScene extends Scene{
     }
 
   private void npcMove() {
-    this.currentPokemon.move(GRID_SIZE, 0);
+    if (!this.movePokemon(1, 0)) {
+      this.movePokemon(0, 1);
+    }
 
 
   }
 
+  private boolean movePokemon(int x, int y) {
+    int oldX = this.currentPokemon.x;
+    int oldY = this.currentPokemon.y;
+    int newX = oldX + x;
+    int newY = oldY + y;
+
+    //checks if the new location is in bound
+    if (!(newX < 0 || oldX + x > 15 || oldY + y < 0 || oldY + y > 9) && map[newX][newY] == null) {
+        map[oldX][oldY] = null;
+        this.currentPokemon.move(x, y);
+        map[oldX + x][oldY + y] = this.currentPokemon;
+        return true;
+    }
+    else {
+      return false;
+    }
 
 
+
+  }
   
 
 }
