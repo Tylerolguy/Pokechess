@@ -244,4 +244,8 @@ public class PokemonData {
     this.abilityModel.draw(g, mode, this.hp, this.maxHP, this.currentMana, this.maxMana);
 
   }
+
+  public void switchFrame() {
+    this.characterModel.nextFrame();
+  }
 }

@@ -7,7 +7,7 @@ import java.util.List;
 public class CharacterModel{
         private int x, y;
         private List<BufferedImage> frames;
-        private int currentFrame = 0;
+        public int currentFrame = 0;
         private final int GRID_SIZE = 32;
 
 
@@ -24,7 +24,18 @@ public class CharacterModel{
             }
         }
 
+        public void previousFrame() {
+            if (frames != null && currentFrame != 0) {
+                currentFrame = (currentFrame - 1);
+            }
+            else if (currentFrame == 0) {
+                currentFrame = frames.size() - 1;
+            }
+        }
+
         public void draw(Graphics g, int hp, int maxHP, int mana, int maxMana) {
+
+            
             if (frames != null && frames.get(currentFrame) != null) {
                 g.drawImage(frames.get(currentFrame), x, y, null);
                 this.drawHealthBar(g, hp, maxMana);

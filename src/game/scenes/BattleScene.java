@@ -22,7 +22,8 @@ public class BattleScene extends Scene{
   private BufferedImage background;
   private SelectorModel selectorModel = new SelectorModel();
   private int frameNumber = 0; //how many "frames" have past since this battle has been loaded (not equivlant to amount of turns)
-  
+  private boolean animate = false;
+
   //Current Battle information
   private ArrayList<PokemonData> listOfPokemons = new ArrayList<PokemonData>(); //a list of all the pokemon on the field
   private PokemonData[][] map = new PokemonData[16][10]; //a 2d array of the locations of all the pokemon/objects on the field
@@ -109,6 +110,7 @@ public class BattleScene extends Scene{
       frameNumber += 1;
       if (frameNumber >= 64) {
         frameNumber = frameNumber % 64;
+        animate = !animate;
         if (!playersTurn) {
           this.timeCounter = this.timeCounter % 2 + 1;
         }
@@ -117,26 +119,36 @@ public class BattleScene extends Scene{
       
       if (timeCounter % 2 == 1){
       //if its not the players turn, increase the speed of all the pokemon but only if no pokemon are not at 100 speed
-      if (!this.playersTurn && this.indexOfPokemonToAct.isEmpty()) {
-        this.timeCounter += 1;
-        for (PokemonData p : this.listOfPokemons) {
-          p.timePass();
-          System.out.println(p.getSpeed());
-          
+        if (!this.playersTurn && this.indexOfPokemonToAct.isEmpty()) {
+          this.timeCounter += 1;
+          for (PokemonData p : this.listOfPokemons) {
+            p.timePass();
+            System.out.println(p.getSpeed());
+            
+          }
+
+          // adds all pokemon that are above 100 speed to list of acting pokemon, sorted in order.
+          this.listOfPokemons.stream()
+            .filter(p -> p.canAct())
+            .sorted((a, b) -> Integer.compare(b.getSpeed(), a.getSpeed()))
+            .forEach(this::pokemonTurn);
         }
 
-        // adds all pokemon that are above 100 speed to list of acting pokemon, sorted in order.
-        this.listOfPokemons.stream()
-          .filter(p -> p.canAct())
-          .sorted((a, b) -> Integer.compare(b.getSpeed(), a.getSpeed()))
-          .forEach(this::pokemonTurn);
+        //if pokemon have a turn, take their turn
+        if (!this.indexOfPokemonToAct.isEmpty()) {
+          this.takeTurns();
+        }
+    
+    
       }
 
-      //if pokemon have a turn, take their turn
-      if (!this.indexOfPokemonToAct.isEmpty()) {
-        this.takeTurns();
-      }}
+    if (animate) {
+      animate = !animate;
+      for (PokemonData pokemon : this.listOfPokemons) {
+        pokemon.switchFrame();
+      }
     }
+  }
 
 
 
@@ -469,6 +481,7 @@ protected void paintComponent(Graphics g) {
 
 
         this.selectorModel.draw(g);
+
       }
       
     }
@@ -476,6 +489,8 @@ protected void paintComponent(Graphics g) {
 
     for (PokemonData p: this.listOfPokemons) {
       p.drawPokemon(g);
+
+      
     }
 
   }
