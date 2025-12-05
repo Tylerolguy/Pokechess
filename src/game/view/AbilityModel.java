@@ -9,22 +9,18 @@ import javax.imageio.ImageIO;
 
 public class AbilityModel {
   private String pokemonName;
-  private int hp;
-  private int maxHP;
   private int movementPoints;
   private int autoPoints;
   private final String location = "src/game/assets/icons/";
 
-  public AbilityModel(String name, int hp, int maxHP) {
+  public AbilityModel(String name) {
     this.pokemonName = name;
-    this.hp = hp;
-    this.maxHP = maxHP;
   }
 
 
 
   //Draws the main ability panel
-  public void draw(Graphics g, String mode) {
+  public void draw(Graphics g, String mode, int hp, int maxHP, int mana, int maxMana) {
 
     BufferedImage currentIcon;
 
@@ -38,45 +34,74 @@ public class AbilityModel {
       currentIcon = ImageIO.read(new File(location + this.pokemonName + "Icon.png"));
       g.drawImage(currentIcon, 132, 523, 50, 50, null);
 
-      //the highlight around the selected ability (update the if statemen) (maybe make it a function)
-      if (true){
+
+
+      g.setColor(Color.PINK);
+
         //ability rectanges
-        g.setColor(Color.PINK);
-        g.fillRect(192, 517, 163, 60);
-        g.fillRect(355, 517, 163, 60);
-        g.fillRect(518, 517, 163, 60);
+        if (mode == "Auto") {
+         g.fillRect(192, 580, 60, 38);
+        }
+        else if (mode == "Moving") {
+          g.fillRect(132, 580, 60, 38);
+        
+        }
+        else if (mode == "QSpecial") {
+          g.fillRect(192, 517, 163, 60);
 
+        }
+        else if (mode == "ESpecial") {
+          g.fillRect(355, 517, 163, 60);
+        }
+        else if (mode == "RSpecial") {
+          g.fillRect(518, 517, 163, 60);
+        }
+        
+        
+        
         g.setColor(Color.BLACK);
-        g.drawRect(192, 517, 163, 60);
-        g.drawRect(355, 517, 163, 60);
-        g.drawRect(518, 517, 163, 60);
-
-        //stat rectangles
-        g.drawRect(395, 580, 40, 18);
-        g.drawRect(395, 600, 40, 18);
-        g.drawRect(355, 580, 40, 18);
-        g.drawRect(355, 600, 40, 18);
-        g.drawRect(315, 580, 40, 18);
-        g.drawRect(315, 600, 40, 18);
-        //stat placeholder image
-        g.drawImage(currentIcon, 318, 582, 15, 15,  null);
 
 
-        //auto box, movebox, endTurn box
-        g.drawRect(132, 580, 60, 38);
-        g.drawRect(192, 580, 60, 38);
-        g.drawRect(252, 580, 60, 38);
+      //ability rectangle outlines and names
+      g.setColor(Color.BLACK);
+      g.drawRect(192, 517, 163, 60);
+      g.drawRect(355, 517, 163, 60);
+      g.drawRect(518, 517, 163, 60);
 
-        g.setFont(new Font("Arial", Font.BOLD, 11));
+      //stat rectangles
+      g.drawRect(395, 580, 40, 18);
+      g.drawRect(395, 600, 40, 18);
+      g.drawRect(355, 580, 40, 18);
+      g.drawRect(355, 600, 40, 18);
+      g.drawRect(315, 580, 40, 18);
+      g.drawRect(315, 600, 40, 18);
+      //stat placeholder image
+      g.drawImage(currentIcon, 318, 582, 15, 15,  null);
 
-        g.drawString("Move: " + this.movementPoints, 134, 592);
-        g.drawString("Button: M", 134, 611);
 
-        g.drawString("Auto: " + this.autoPoints, 194, 592);
-        g.drawString("Button: X", 194, 611);
+      //auto box, movebox, endTurn box
+      g.drawRect(132, 580, 60, 38);
+      g.drawRect(192, 580, 60, 38);
+      g.drawRect(252, 580, 60, 38);
+
+      g.setFont(new Font("Arial", Font.BOLD, 11));
+
+      g.drawString("Move: " + this.movementPoints, 134, 592);
+      g.drawString("Button: M", 134, 611);
+
+      g.drawString("Auto: " + this.autoPoints, 194, 592);
+      g.drawString("Button: X", 194, 611);
+
+      //the highlight around the selected ability (update the if statemen) (maybe make it a function)
 
         
-        if (mode == "Waiting" || mode == "Moving") {
+
+        
+
+        
+
+
+      if (mode == "Waiting" || mode == "Moving") {
           g.drawString("End Turn", 254, 592);
         }
         else {
@@ -84,9 +109,6 @@ public class AbilityModel {
         }
         g.drawString("Space", 254, 611);
 
-
-
-      }
       
 
       //draws the abilites, change the if statement to be a for each ability that the pokemon has
@@ -98,8 +120,8 @@ public class AbilityModel {
 
 
       //Draws the health and mana bar, might be able to convert to one method if throw in colors, and location
-      this.drawHealth(g, this.hp, this.maxHP);
-      this.drawMana(g, 0, 10);
+      this.drawHealth(g, hp, maxHP);
+      this.drawMana(g, mana, maxMana);
 
 
 
@@ -159,19 +181,19 @@ public class AbilityModel {
       g.drawRect(x, y, length, height);
 
     g.setFont(new Font("Arial", Font.BOLD, 12));
-      g.drawString("  10/10 ", x + (int)(length / 2) - 21, y + (int)(height / 2) + 5);
+      g.drawString(this.getStringForBars(hp, maxHP), x + (int)(length / 2) - 21, y + (int)(height / 2) + 5);
 
   }
 
 
-  private void drawMana(Graphics g, int hp, int maxHP) {
+  private void drawMana(Graphics g, int mana, int maxMana) {
       int length = 240;
       int height = 18;
       int x = 441;
       int y = 600;
 
       // Calculate the width of the filled portion based on HP
-      int filledWidth = (int) ((hp/ (float) maxHP) * length);
+      int filledWidth = (int) ((mana/ (float) maxMana) * length);
 
       // Draw background (empty bar)
       g.setColor(Color.LIGHT_GRAY);
@@ -186,7 +208,18 @@ public class AbilityModel {
       g.drawRect(x, y, length, height);
 
       g.setFont(new Font("Arial", Font.BOLD, 12));
-      g.drawString("  10/10 ", x + (int)(length / 2) - 21, y + (int)(height / 2) + 5);
+
+      g.drawString(this.getStringForBars(mana, maxMana), x + (int)(length / 2) - 21, y + (int)(height / 2) + 5);
+
+  }
+
+  private String getStringForBars(int current, int max) {
+    String s = String.valueOf(current);
+    while (s.length() < 5) {
+      s = " " + s;
+    }
+    s = s + "/" + String.valueOf(max);
+    return s;
 
   }
   

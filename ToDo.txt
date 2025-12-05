@@ -1,0 +1,31 @@
+
+
+
+
+
+do i need paint in battlescne or can i jsut call paint components
+
+
+
+
+pokemon - stats
+
+move data - move data
+
+
+
+
+
+
+the selector is both a model and has important data of what pokmeon is selected, maybe move that out?
+
+
+
+
+
+Abstract the selector paint, for range, what pokemon get red target and which get green target yellow for something.
+
+
+change selector valid targets for the move selector (update for if using a self move or ally move)
+also add in, if no mana or auto attacks left, change the color
+

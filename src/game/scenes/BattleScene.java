@@ -1,6 +1,8 @@
 package game.scenes;
 
+import game.engine.MoveCalculator;
 import game.engine.Scene;
+import game.gamedata.MoveData;
 import game.gamedata.PokemonData;
 import game.view.SelectorModel;
 
@@ -19,16 +21,19 @@ public class BattleScene extends Scene{
   //Image control stuff
   private BufferedImage background;
   private SelectorModel selectorModel = new SelectorModel();
-
+  private int frameNumber = 0; //how many "frames" have past since this battle has been loaded (not equivlant to amount of turns)
+  
   //Current Battle information
   private ArrayList<PokemonData> listOfPokemons = new ArrayList<PokemonData>(); //a list of all the pokemon on the field
   private PokemonData[][] map = new PokemonData[16][10]; //a 2d array of the locations of all the pokemon/objects on the field
   private boolean playersTurn = false; //a boolean if it is the current players turn
   private ArrayList<Integer> indexOfPokemonToAct = new ArrayList<Integer>(); //the list of pokemon who have speed over 100 in order
-  private int frameNumber = 0; //how many "frames" have past since this battle has been loaded (not equivlant to amount of turns)
+  private int timeCounter = 0;
 
   //current selected pokemon Data
   private PokemonData currentPokemon; //the current pokemon whos turn it is
+  private MoveData currentMove;
+  private MoveCalculator moveCalculator = new MoveCalculator();
 
   private enum selectionState { //the current option that the player has selected, determines what their next inputs do
     MOVING("Moving"),
@@ -63,10 +68,19 @@ public class BattleScene extends Scene{
 
         }
       }
-
+      //MoveData tackle = new MoveData("tackle", "Physical", true, 1, 2, "Auto");
+      MoveData psychic = new MoveData("psychi", "Special", true, 3, 4, 2);
+      MoveData recover = new MoveData("recover", "Special", true, 4, 0, 3);
+      MoveData futureSight = new MoveData("future", "Special", true, 50, 60, 1);
+      MoveData[] moves = new MoveData[3];
+      moves[0] = psychic;
+      moves[1] = recover;
+      moves[2] = futureSight;
+      
+      
       //testing purposes
-      PokemonData mew = new PokemonData("Mew", 10, 0, 0, 20, "player", "0151"); 
-      PokemonData charmander = new PokemonData("Charmander", 10, 1, 0, 20, "npc", "0004"); 
+      PokemonData mew = new PokemonData("Mew", 10, 0, 0, 20, "player", "0151", moves); 
+      PokemonData charmander = new PokemonData("Charmander", 10, 1, 0, 20, "npc", "0004", moves); 
       this.listOfPokemons.add( mew);
       this.listOfPokemons.add(charmander);
       this.map[0][0] = mew;
@@ -81,6 +95,10 @@ public class BattleScene extends Scene{
 
     }
 
+    public BattleScene(PokemonData[] playersSetupPokemon, PokemonData[] enemySetupPokemon) {
+
+    }
+
   
     ////////////////////////////////////////// Game Run Methods ////////////////////////////////////////
 
@@ -88,25 +106,36 @@ public class BattleScene extends Scene{
     //called by game engine to start running the game
     public void update() {
       //update the frame number
-      frameNumber = (frameNumber + 1) % 64;
-
+      frameNumber += 1;
+      if (frameNumber >= 64) {
+        frameNumber = frameNumber % 64;
+        if (!playersTurn) {
+          this.timeCounter = this.timeCounter % 2 + 1;
+        }
+      }
+      
+      
+      if (timeCounter % 2 == 1){
       //if its not the players turn, increase the speed of all the pokemon but only if no pokemon are not at 100 speed
       if (!this.playersTurn && this.indexOfPokemonToAct.isEmpty()) {
+        this.timeCounter += 1;
         for (PokemonData p : this.listOfPokemons) {
-          p.updateSpeed();
+          p.timePass();
+          System.out.println(p.getSpeed());
+          
         }
 
         // adds all pokemon that are above 100 speed to list of acting pokemon, sorted in order.
         this.listOfPokemons.stream()
           .filter(p -> p.canAct())
-          .sorted((a, b) -> Integer.compare(b.currentSpeed, a.currentSpeed))
+          .sorted((a, b) -> Integer.compare(b.getSpeed(), a.getSpeed()))
           .forEach(this::pokemonTurn);
       }
 
       //if pokemon have a turn, take their turn
       if (!this.indexOfPokemonToAct.isEmpty()) {
         this.takeTurns();
-      }
+      }}
     }
 
 
@@ -129,7 +158,7 @@ public class BattleScene extends Scene{
         //sets the pokemon and reduces its speed, removes the pokemon from the list as well
         int currentIndex = indexOfPokemonToAct.get(0);
         this.currentPokemon = this.listOfPokemons.get(currentIndex);
-        this.currentPokemon.currentSpeed -= 100;
+        this.currentPokemon.act();
         this.selectorModel.addSelectedPokemonLocation(this.currentPokemon.x, this.currentPokemon.y);
         this.indexOfPokemonToAct.remove(0);
 
@@ -148,13 +177,13 @@ public class BattleScene extends Scene{
   private void endTurn() {
     this.playersTurn = false;
     this.currentPokemon.endTurn();
-    this.state = selectionState.WAITING;
+    this.setState(selectionState.WAITING);
   }
 
 
   //place holder method until the npc AI is made
   private void npcMove() {
-    state = selectionState.WAITING;
+    this.setState(selectionState.WAITING);
     if (!this.movePokemon(1, 0)) {
       this.movePokemon(0, 1);
     }
@@ -174,13 +203,14 @@ public class BattleScene extends Scene{
       if (playersTurn) {
         //if no state is yet selected, determines what action the player wants to take
         if (state == selectionState.WAITING) {
+          this.currentMove = null;
           switch (e.getKeyCode()) {
-                case KeyEvent.VK_SPACE: this.endTurn(); break;
-                case KeyEvent.VK_M: state = selectionState.MOVING; break;
-                case KeyEvent.VK_X: state = selectionState.AUTO; break;
-                case KeyEvent.VK_Q: state = selectionState.QSPECIAL; break;
-                case KeyEvent.VK_E: state = selectionState.ESPECIAL; break;
-                case KeyEvent.VK_R: state = selectionState.RSPECIAL; break;
+            case KeyEvent.VK_SPACE: this.endTurn(); break;
+            case KeyEvent.VK_M: this.setState(selectionState.MOVING); break;
+            case KeyEvent.VK_X: this.setState(selectionState.AUTO); break;
+            case KeyEvent.VK_Q: this.setState(selectionState.QSPECIAL); break;
+            case KeyEvent.VK_E: this.setState(selectionState.ESPECIAL); break;
+            case KeyEvent.VK_R: this.setState(selectionState.RSPECIAL); break;
           }}
 
 
@@ -188,11 +218,11 @@ public class BattleScene extends Scene{
         else if (state == selectionState.MOVING) {
           switch (e.getKeyCode()) {
             case KeyEvent.VK_SPACE: this.endTurn(); break;
-            case KeyEvent.VK_M: state = selectionState.WAITING; break;
-            case KeyEvent.VK_X: state = selectionState.AUTO; break;
-            case KeyEvent.VK_Q: state = selectionState.QSPECIAL; break;
-            case KeyEvent.VK_E: state = selectionState.ESPECIAL; break;
-            case KeyEvent.VK_R: state = selectionState.RSPECIAL; break;
+            case KeyEvent.VK_M: this.setState(selectionState.WAITING); break;
+            case KeyEvent.VK_X: this.setState(selectionState.AUTO); break;
+            case KeyEvent.VK_Q: this.setState(selectionState.QSPECIAL); break;
+            case KeyEvent.VK_E: this.setState(selectionState.ESPECIAL); break;
+            case KeyEvent.VK_R: this.setState(selectionState.RSPECIAL); break;
             
             case KeyEvent.VK_W: this.movePokemon(0, -1); break; //UP
             case KeyEvent.VK_S: this.movePokemon(0, 1); break; //DOWN
@@ -202,13 +232,12 @@ public class BattleScene extends Scene{
         }
         else if (state == selectionState.AUTO) {
           switch (e.getKeyCode()) {
-            //add method select
             case KeyEvent.VK_SPACE: this.doAuto(this.selectorModel.selectorX, this.selectorModel.selectorY); break;
-            case KeyEvent.VK_M: state = selectionState.MOVING; break;
-            case KeyEvent.VK_X: state = selectionState.WAITING; break;
-            case KeyEvent.VK_Q: state = selectionState.QSPECIAL; break;
-            case KeyEvent.VK_E: state = selectionState.ESPECIAL; break;
-            case KeyEvent.VK_R: state = selectionState.RSPECIAL; break;
+            case KeyEvent.VK_M: this.setState(selectionState.MOVING); break;
+            case KeyEvent.VK_X: this.setState(selectionState.WAITING); break;
+            case KeyEvent.VK_Q: this.setState(selectionState.QSPECIAL); break;
+            case KeyEvent.VK_E: this.setState(selectionState.ESPECIAL); break;
+            case KeyEvent.VK_R: this.setState(selectionState.RSPECIAL); break;
 
             case KeyEvent.VK_W: this.moveSelector(0, -1); break; //UP
             case KeyEvent.VK_S: this.moveSelector(0, 1); break; //DOWN
@@ -217,13 +246,12 @@ public class BattleScene extends Scene{
         }}
         else if (state == selectionState.QSPECIAL) {
           switch (e.getKeyCode()) {
-            //add method select
-            case KeyEvent.VK_SPACE: this.doAuto(this.selectorModel.selectorX, this.selectorModel.selectorY); break;
-            case KeyEvent.VK_M: state = selectionState.MOVING; break;
-            case KeyEvent.VK_X: state = selectionState.AUTO; break;
-            case KeyEvent.VK_Q: state = selectionState.WAITING; break;
-            case KeyEvent.VK_E: state = selectionState.ESPECIAL; break;
-            case KeyEvent.VK_R: state = selectionState.RSPECIAL; break;
+            case KeyEvent.VK_SPACE: this.doMove(this.selectorModel.selectorX, this.selectorModel.selectorY); break;
+            case KeyEvent.VK_M: this.setState(selectionState.MOVING); break;
+            case KeyEvent.VK_X: this.setState(selectionState.AUTO); break;
+            case KeyEvent.VK_Q: this.setState(selectionState.WAITING); break;
+            case KeyEvent.VK_E: this.setState(selectionState.ESPECIAL); break;
+            case KeyEvent.VK_R: this.setState(selectionState.RSPECIAL); break;
 
             case KeyEvent.VK_W: this.moveSelector(0, -1); break; //UP
             case KeyEvent.VK_S: this.moveSelector(0, 1); break; //DOWN
@@ -233,12 +261,12 @@ public class BattleScene extends Scene{
         else if (state == selectionState.ESPECIAL) {
           switch (e.getKeyCode()) {
             //add method select
-            case KeyEvent.VK_SPACE: this.doAuto(this.selectorModel.selectorX, this.selectorModel.selectorY); break;
-            case KeyEvent.VK_M: state = selectionState.MOVING; break;
-            case KeyEvent.VK_X: state = selectionState.AUTO; break;
-            case KeyEvent.VK_Q: state = selectionState.QSPECIAL; break;
-            case KeyEvent.VK_E: state = selectionState.WAITING; break;
-            case KeyEvent.VK_R: state = selectionState.RSPECIAL; break;
+            case KeyEvent.VK_SPACE: this.doMove(this.selectorModel.selectorX, this.selectorModel.selectorY); break;
+            case KeyEvent.VK_M: this.setState(selectionState.MOVING); break;
+            case KeyEvent.VK_X: this.setState(selectionState.AUTO); break;
+            case KeyEvent.VK_Q: this.setState(selectionState.QSPECIAL); break;
+            case KeyEvent.VK_E: this.setState(selectionState.WAITING); break;
+            case KeyEvent.VK_R: this.setState(selectionState.RSPECIAL); break;
 
             case KeyEvent.VK_W: this.moveSelector(0, -1); break; //UP
             case KeyEvent.VK_S: this.moveSelector(0, 1); break; //DOWN
@@ -249,12 +277,12 @@ public class BattleScene extends Scene{
         else if (state == selectionState.RSPECIAL) {
           switch (e.getKeyCode()) {
             //add method select
-            case KeyEvent.VK_SPACE: this.doAuto(this.selectorModel.selectorX, this.selectorModel.selectorY); break;
-            case KeyEvent.VK_M: state = selectionState.MOVING; break;
-            case KeyEvent.VK_X: state = selectionState.AUTO; break;
-            case KeyEvent.VK_Q: state = selectionState.QSPECIAL; break;
-            case KeyEvent.VK_E: state = selectionState.ESPECIAL; break;
-            case KeyEvent.VK_R: state = selectionState.WAITING; break;
+            case KeyEvent.VK_SPACE: this.doMove(this.selectorModel.selectorX, this.selectorModel.selectorY); break;
+            case KeyEvent.VK_M: this.setState(selectionState.MOVING); break;
+            case KeyEvent.VK_X: this.setState(selectionState.AUTO); break;
+            case KeyEvent.VK_Q: this.setState(selectionState.QSPECIAL); break;
+            case KeyEvent.VK_E: this.setState(selectionState.ESPECIAL); break;
+            case KeyEvent.VK_R: this.setState(selectionState.WAITING); break;
 
             case KeyEvent.VK_W: this.moveSelector(0, -1); break; //UP
             case KeyEvent.VK_S: this.moveSelector(0, 1); break; //DOWN
@@ -262,13 +290,62 @@ public class BattleScene extends Scene{
             case KeyEvent.VK_D: this.moveSelector(1, 0); break; //RIGHT
 
         }}
+        else {
+          this.setState(selectionState.WAITING);
+        }
      
+      }
+      else {
+        this.timeCounter += 1;
       }
       
     }
 
 
-  /////////////////////////////////////////// Map Managers  ////////////////////////////////////
+  private void setState(selectionState state) {
+    this.selectorModel.setSelector(this.currentPokemon.x, this.currentPokemon.y);
+    this.state = state;
+    switch (state) {
+      case AUTO: 
+      this.currentMove = new MoveData("Auto", "Physical", true, 1, this.currentPokemon.getAutoRange(),0, "Auto");
+      break;
+    
+      case QSPECIAL:
+        if (this.currentPokemon.getQSpecial() != null) {
+          this.currentMove = this.currentPokemon.getQSpecial();
+        }
+        else {
+          this.state = selectionState.WAITING;
+        }
+        break;
+      case ESPECIAL:
+        if (this.currentPokemon.getESpecial() != null) {
+          this.currentMove = this.currentPokemon.getESpecial();
+        }
+        else {
+          this.state = selectionState.WAITING;
+        }
+        break;
+      case RSPECIAL:
+        if (this.currentPokemon.getRSpecial() != null) {
+          this.currentMove = this.currentPokemon.getRSpecial();
+        }
+        else {
+          this.state = selectionState.WAITING;
+        }
+        break;
+      default:
+        this.currentMove = null;
+        break;
+
+
+
+    }
+
+  }
+
+
+  /////////////////////////////////////////// Movement Managers  ////////////////////////////////////
 
 
     
@@ -304,7 +381,7 @@ public class BattleScene extends Scene{
     int newY = oldY + y;
     
     //checks if the new location is in bound
-    if (!(newX < 0 || newX > 15 || newY < 0 || newY > 9) && this.validRange(newX, newY, 1)) {
+    if (!(newX < 0 || newX > 15 || newY < 0 || newY > 9) && this.validRange(newX, newY, this.currentMove.range)) {
         this.selectorModel.moveSelector(x, y);
     }
   }
@@ -318,6 +395,43 @@ public class BattleScene extends Scene{
     && selectorY >= this.currentPokemon.y - range;
   }
     
+
+
+  /////////////////////////////////////// Attack Managers ////////////////////////////////////////////////////////////
+
+  
+  //change to use move
+  private void doAuto(int x, int y) {
+    if (moveCalculator.validTarget(currentMove, currentPokemon, map[x][y])) {
+      this.moveCalculator.doAuto(currentMove, currentPokemon, map[x][y]);
+    }
+    
+  }
+
+
+  private void doMove(int x, int y) {
+    if (moveCalculator.validSpecialTarget(currentMove, currentPokemon, map[x][y])) {
+      this.moveCalculator.doMove(currentMove, currentPokemon, map[x][y]);
+        for (int i = this.listOfPokemons.size() - 1; i >= 0; i--) {
+            if (listOfPokemons.get(i).isFainted()) {
+                this.faint(listOfPokemons.get(i));
+            }
+}
+    }
+
+
+  }
+
+
+
+
+  private void faint(PokemonData p) {
+    this.indexOfPokemonToAct.remove(Integer.valueOf(this.listOfPokemons.indexOf(p)));
+    this.listOfPokemons.remove(p);
+    map[p.x][p.y] = null;
+  }
+
+
 
 
 
@@ -339,17 +453,24 @@ protected void paintComponent(Graphics g) {
     g.drawImage(background, 0, 0, 807, 630, null);
 
     if (this.currentPokemon != null) {
-      this.currentPokemon.drawAbilities(g, state.getState());
 
+      if (currentPokemon.trainer == "player") {
+        this.currentPokemon.drawAbilities(g, state.getState());
+      
+        if (this.currentMove != null) {
+          if (this.currentMove.tag == null || this.currentMove.tag == "Auto") {
+            this.selectorModel.drawRangeMapTargetEnemy(g, map, this.currentMove.range, true, false);
+            this.selectorModel.drawSingleEnemySelector(g, map[this.selectorModel.selectorX][this.selectorModel.selectorY]);
+
+            }
+          }
+      }
       if (this.frameNumber < 32) {
 
 
         this.selectorModel.draw(g);
       }
-
-      if (this.state == selectionState.AUTO) {
-          this.selectorModel.drawAutoSelector(g, map[this.selectorModel.selectorX][this.selectorModel.selectorY]);
-        }
+      
     }
     
 
@@ -367,22 +488,7 @@ protected void paintComponent(Graphics g) {
 
 
 
-    
 
-    
-
-
-
-  
-
-
-
-
-  private void doAuto(int x, int y) {
-    this.currentPokemon.doAuto(x, y, map[x][y]);
-
-
-  }
 
   
 

@@ -24,9 +24,11 @@ public class CharacterModel{
             }
         }
 
-        public void draw(Graphics g) {
+        public void draw(Graphics g, int hp, int maxHP, int mana, int maxMana) {
             if (frames != null && frames.get(currentFrame) != null) {
                 g.drawImage(frames.get(currentFrame), x, y, null);
+                this.drawHealthBar(g, hp, maxMana);
+                this.drawManaBar(g, mana, maxMana);
                 
             }
         }
@@ -43,9 +45,9 @@ public class CharacterModel{
         }
 
 
-        public void drawHealthBar(Graphics g, int currentHp, int maxHp) {
+        private void drawHealthBar(Graphics g, int currentHp, int maxHp) {
             int barWidth = GRID_SIZE - 4;         // width matches your grid
-            int barHeight = 4;               // fixed height
+            int barHeight = 3;               // fixed height
             int padding = 2; // optional padding above sprite
 
             int nx = this.x;       
@@ -66,6 +68,31 @@ public class CharacterModel{
             g.setColor(Color.BLACK);
             g.drawRect(nx - 2, ny - barHeight - padding, barWidth, barHeight);
         }
+
+    private void drawManaBar(Graphics g, int mana, int maxMana) {
+            int barWidth = GRID_SIZE - 4;         // width matches your grid
+            int barHeight = 3;               // fixed height
+            int padding = 2; // optional padding above sprite
+
+            int nx = this.x;       
+            int ny = this.y;          
+
+            // Calculate the width of the filled portion based on HP
+            int filledWidth = (int) ((mana / (float) maxMana) * barWidth);
+
+            // Draw background (empty bar)
+            g.setColor(Color.LIGHT_GRAY);
+            g.fillRect(nx - 2, ny - barHeight - padding + barHeight, barWidth, barHeight);
+
+            // Draw foreground (filled bar)
+            g.setColor(Color.CYAN);
+            g.fillRect(nx - 2, ny - barHeight - padding + barHeight, filledWidth, barHeight);
+
+            // Optional: draw borders
+            g.setColor(Color.BLACK);
+            g.drawRect(nx - 2, ny - barHeight - padding + barHeight, barWidth, barHeight);
+
+  }
     }
 
 

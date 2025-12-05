@@ -13,6 +13,16 @@ public class PokemonData {
   
   private int hp; //current hp value
   private int maxHP; // hp at full health
+  private int attack = 1;
+  private int specialAttack = 1;
+  private int defense = 1;
+  private int specialDefense = 1;
+  private int autoRange = 2;
+  private int currentMana = 0;
+  private int manaRecovery = 1;
+  private int maxMana = 10;
+
+  private MoveData[] moves;
 
   private int movementPoints = 2; // How much the pokemon can move this turn
   private int movementPointsTotal = 2; //how much can a pokemon move on their turn
@@ -21,7 +31,7 @@ public class PokemonData {
   private int autoPointsTotal = 1; //how much can a pokemon move on their turn
 
   private int speedStat; // how often the pokemon gets to take a turn (100/5)
-  public int currentSpeed = 0; // the current speed, when it gets to 100 it takes its turn
+  private int currentSpeed = 0; // the current speed, when it gets to 100 it takes its turn
 
   // --------------- Map location ----------
   public int x;
@@ -42,7 +52,7 @@ public class PokemonData {
 
 
   //Constructor
-  public PokemonData(String name, int hp, int x, int y, int speedStat, String trainer, String id) {
+  public PokemonData(String name, int hp, int x, int y, int speedStat, String trainer, String id, MoveData[] moves) {
     this.name = name;
     this.hp = hp;
     this.maxHP = hp;
@@ -54,7 +64,8 @@ public class PokemonData {
 
     this.trainer = trainer;
 
-    this.abilityModel = new AbilityModel(name, hp, maxHP);
+    this.abilityModel = new AbilityModel(name);
+    this.moves = moves;
     try {
       this.characterModel = new CharacterModel(this.x, this.y, this.jsonImporter.loadFromJSON(id));
     } catch (Exception e) {
@@ -79,8 +90,12 @@ public class PokemonData {
 
 
   //updates the pokemons current speed.
-  public void updateSpeed() {
+  public void timePass() {
     this.currentSpeed += this.speedStat;
+    this.currentMana += this.manaRecovery;
+    if (this.currentMana > this.maxMana) {
+      this.currentMana = this.maxMana;
+    }
   }
 
 
@@ -97,12 +112,11 @@ public class PokemonData {
   }
 
 
-  public void doAuto(int x, int y, PokemonData target) {
-    if (this.autoPoints > 0 && target.trainer != this.trainer) {
-      this.autoPoints -= 1;
-      target.takeDamage(1);
-    }
+  public void act() {
+    this.currentSpeed -= 100;
   }
+
+
 
 
 
@@ -122,21 +136,112 @@ public class PokemonData {
     return this.currentSpeed >= 100;
   }
 
+  public int getSpeed() {
+    return this.currentSpeed;
+  }
+
+  public boolean canAuto() {
+    return this.autoPoints > 0;
+  }
+
+  public int getAutoRange() {
+    return this.autoRange;
+  }
+
+  public boolean canUseSpecial(int cost) {
+    return this.currentMana >= cost;
+  }
+
+  //not every pokemon has a e, so have to check it exists first
+  public MoveData getQSpecial() {
+    if (this.moves.length > 0) {
+      return this.moves[0];
+    }
+    else {
+      return null;
+    }
+  }
+
+  //not every pokemon has a e, so have to check it exists first
+  public MoveData getESpecial() {
+    if (this.moves.length > 1) {
+      return this.moves[1];
+    }
+    else {
+      return null;
+    }
+  }
+
+  //not every pokemon has a r, so have to check it exists first
+  public MoveData getRSpecial() {
+    if (this.moves.length > 2) {
+      return this.moves[2];
+    }
+    else {
+      return null;
+    }
+  }
+
+
+  public boolean isFainted() {
+    return this.hp <= 0;
+  }
+
+
+
+
+  /////////////////////////// Battle Methods ////////////////////////////////////
+
+
+
+
+
+  public void doAuto() {
+      this.autoPoints -= 1;
+    }
+
+  public void doSpecial(int cost) {
+    this.currentMana -= cost;
+  }
+  
+
+
+  public int getDamage(String type, int baseDamage) {
+    if (type == "Physical"){
+      return baseDamage + this.attack;
+    }
+    else {
+      return baseDamage + this.specialAttack;
+    }
+  }
+
+
+  public void takeDamage(String type, int damage)
+  {
+    if (type == "Physical"){
+      this.hp = this.hp - (damage - this.defense);
+    }
+    else {
+      this.hp = this.hp - (damage - this.specialDefense);
+    }
+  }
+
+  
+
 
 
   // ---------------------------- Visual draw methods and helpers ----------------------------------------
 
   //draws the pokemon at the current position with its health bar above it
   public void drawPokemon(Graphics g) {
-    this.characterModel.draw(g);
-    this.characterModel.drawHealthBar(g, this.hp, this.maxHP);
+    this.characterModel.draw(g, this.hp, this.maxHP, this.currentMana, this.maxMana);
   }
 
 
   //draws the pokemon abilites, icon, and health at the bottom of the screen.
   public void drawAbilities(Graphics g, String mode) {
     this.abilityModel.updatePoints(this.movementPoints, this.autoPoints);
-    this.abilityModel.draw(g, mode);
+    this.abilityModel.draw(g, mode, this.hp, this.maxHP, this.currentMana, this.maxMana);
 
   }
 }
