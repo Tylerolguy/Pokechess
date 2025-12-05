@@ -17,8 +17,11 @@ public class PokemonData {
   private int movementPoints = 2; // How much the pokemon can move this turn
   private int movementPointsTotal = 2; //how much can a pokemon move on their turn
 
+  private int autoPoints = 1; // How much the pokemon can move this turn
+  private int autoPointsTotal = 1; //how much can a pokemon move on their turn
+
   private int speedStat; // how often the pokemon gets to take a turn (100/5)
-  public int currentSpeed; // the current speed, when it gets to 100 it takes its turn
+  public int currentSpeed = 0; // the current speed, when it gets to 100 it takes its turn
 
   // --------------- Map location ----------
   public int x;
@@ -43,10 +46,14 @@ public class PokemonData {
     this.name = name;
     this.hp = hp;
     this.maxHP = hp;
+
+    this.speedStat = speedStat;
+
     this.x = x;
     this.y = y;
-    this.speedStat = speedStat;
+
     this.trainer = trainer;
+
     this.abilityModel = new AbilityModel(name, hp, maxHP);
     try {
       this.characterModel = new CharacterModel(this.x, this.y, this.jsonImporter.loadFromJSON(id));
@@ -66,7 +73,7 @@ public class PokemonData {
         this.x += x;
         this.y += y;
         this.characterModel.move(x, y);
-        this.abilityModel.updateMovementPoints(this.movementPoints);
+        this.abilityModel.updatePoints(this.movementPoints, 0);
 
   }
 
@@ -86,10 +93,16 @@ public class PokemonData {
   //called when a pokemon's turn is over, updating any end of turn information
   public void endTurn() {
     this.movementPoints = this.movementPointsTotal;
+    this.autoPoints = this.autoPointsTotal;
   }
 
 
-
+  public void doAuto(int x, int y, PokemonData target) {
+    if (this.autoPoints > 0 && target.trainer != this.trainer) {
+      this.autoPoints -= 1;
+      target.takeDamage(1);
+    }
+  }
 
 
 
@@ -121,9 +134,9 @@ public class PokemonData {
 
 
   //draws the pokemon abilites, icon, and health at the bottom of the screen.
-  public void drawAbilities(Graphics g) {
-    this.abilityModel.updateMovementPoints(this.movementPoints);
-    this.abilityModel.draw(g);
+  public void drawAbilities(Graphics g, String mode) {
+    this.abilityModel.updatePoints(this.movementPoints, this.autoPoints);
+    this.abilityModel.draw(g, mode);
 
   }
 }

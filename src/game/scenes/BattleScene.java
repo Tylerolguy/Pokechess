@@ -24,13 +24,23 @@ public class BattleScene extends Scene{
   private PokemonData[][] map;
   private SelectorModel selectorModel;
   private int frameNumber = 0;
-  private boolean frameSwitch = true;
+
 
   private enum selectionState {
-    MOVING,
-    PHYSICALATTACK,
-    SPECIALATTACK,
-    WAITING
+    MOVING("Moving"),
+    AUTO("Auto"),
+    SPECIAL("Special"),
+    WAITING("Waiting");
+
+    private final String name;
+
+    selectionState(String name) {
+      this.name = name;
+    }
+
+    public String getState() {
+      return this.name;
+    }
   }
   private selectionState state = selectionState.WAITING;
 
@@ -92,11 +102,17 @@ public class BattleScene extends Scene{
       g.drawImage(background, 0, 0, 807, 630, null);
 
       if (this.currentPokemon != null) {
-        this.currentPokemon.drawAbilities(g);
+        this.currentPokemon.drawAbilities(g, state.getState());
 
-        if (frameSwitch) {
-          this.selectorModel.draw(g, this.currentPokemon.x, this.currentPokemon.y);
+        if (this.frameNumber < 32) {
+
+
+          this.selectorModel.draw(g);
         }
+
+        if (this.state == selectionState.AUTO) {
+            this.selectorModel.drawAutoSelector(g, map[this.selectorModel.selectorX][this.selectorModel.selectorY]);
+          }
       }
       
 
@@ -109,8 +125,7 @@ public class BattleScene extends Scene{
     }
 
     public void update() {
-      frameNumber = (frameNumber + 1) % 32;
-      if (frameNumber == 0) frameSwitch = !frameSwitch;
+      frameNumber = (frameNumber + 1) % 64;
 
       if (!this.playersTurn && this.indexOfPokemonToAct.isEmpty()) {
         for (PokemonData p : this.listOfPokemons) {
@@ -135,27 +150,39 @@ public class BattleScene extends Scene{
 
     public void input(KeyEvent e) {
       if (playersTurn) {
-        switch (e.getKeyCode()) {
-              case KeyEvent.VK_SPACE: this.endTurn(); break;
-              case KeyEvent.VK_M: state = selectionState.MOVING; break;
-              case KeyEvent.VK_Q: state = selectionState.PHYSICALATTACK; break;
-              // case KeyEvent.VK_W: this.movePokemon(0, -1); break; //UP
-              // case KeyEvent.VK_S: this.movePokemon(0, 1); break; //DOWN
-              // case KeyEvent.VK_A: this.movePokemon(-1, 0); break; //LEFT
-              // case KeyEvent.VK_D: this.movePokemon(1, 0); break; //RIGHT
-
-          }
-        if (state == selectionState.MOVING) {
+        if (state == selectionState.WAITING) {
           switch (e.getKeyCode()) {
+                case KeyEvent.VK_SPACE: this.endTurn(); break;
+                case KeyEvent.VK_M: state = selectionState.MOVING; break;
+                case KeyEvent.VK_X: state = selectionState.AUTO; break;
+          }}
+        else if (state == selectionState.MOVING) {
+          switch (e.getKeyCode()) {
+            case KeyEvent.VK_SPACE: state = selectionState.WAITING; break;
+            case KeyEvent.VK_M: state = selectionState.WAITING; break;
+            case KeyEvent.VK_X: state = selectionState.AUTO; break;
             case KeyEvent.VK_W: this.movePokemon(0, -1); break; //UP
             case KeyEvent.VK_S: this.movePokemon(0, 1); break; //DOWN
             case KeyEvent.VK_A: this.movePokemon(-1, 0); break; //LEFT
             case KeyEvent.VK_D: this.movePokemon(1, 0); break; //RIGHT
+          }
         }
+        else if (state == selectionState.AUTO) {
+          switch (e.getKeyCode()) {
+            case KeyEvent.VK_M: state = selectionState.MOVING; break;
+            case KeyEvent.VK_X: state = selectionState.WAITING; break;
+            case KeyEvent.VK_SPACE: this.doAuto(this.selectorModel.selectorX, this.selectorModel.selectorY); break;
+            case KeyEvent.VK_W: this.moveSelector(0, -1); break; //UP
+            case KeyEvent.VK_S: this.moveSelector(0, 1); break; //DOWN
+            case KeyEvent.VK_A: this.moveSelector(-1, 0); break; //LEFT
+            case KeyEvent.VK_D: this.moveSelector(1, 0); break; //RIGHT
+
+        }}
+     
       }
       
     }
-    }
+    
 
     public void endTurn() {
       this.playersTurn = false;
@@ -177,7 +204,8 @@ public class BattleScene extends Scene{
 
         this.currentPokemon = this.listOfPokemons.get(currentIndex);
         this.currentPokemon.currentSpeed -= 100;
-        System.out.println(this.currentPokemon.name);
+
+        this.selectorModel.addSelectedPokemonLocation(this.currentPokemon.x, this.currentPokemon.y);
         this.indexOfPokemonToAct.remove(0);
 
         if (this.currentPokemon.trainer.equals("player")) {
@@ -208,11 +236,12 @@ public class BattleScene extends Scene{
     int newY = oldY + y;
 
     //checks if the new location is in bound
-    if (!(newX < 0 || oldX + x > 15 || oldY + y < 0 || oldY + y > 9) && map[newX][newY] == null 
+    if (!(newX < 0 || newX > 15 || newY < 0 || newY > 9) && map[newX][newY] == null 
         && this.currentPokemon.canMove()) {
         map[oldX][oldY] = null;
         this.currentPokemon.move(x, y);
         map[oldX + x][oldY + y] = this.currentPokemon;
+        this.selectorModel.moveSelectedPokemonLocation(x, y);
         return true;
     }
     else {
@@ -222,6 +251,43 @@ public class BattleScene extends Scene{
 
 
   }
+
+  private boolean moveSelector(int x, int y) {
+    int oldX = this.selectorModel.selectorX;
+    int oldY = this.selectorModel.selectorY;
+    int newX = oldX + x;
+    int newY = oldY + y;
+    
+
+    //checks if the new location is in bound
+    if (!(newX < 0 || newX > 15 || newY < 0 || newY > 9) && this.validRange(newX, newY)) {
+        //map[oldX][oldY] = null;
+        this.selectorModel.moveSelector(x, y);
+        //map[oldX + x][oldY + y] = this.currentPokemon;
+        return true;
+    }
+    else {
+      return false;
+    }
+    
+  }
+
+
+  private boolean validRange(int selectorX, int selectorY) {
+    return selectorX <= this.currentPokemon.x + 1 
+    && selectorX >= this.currentPokemon.x - 1
+    && selectorY <= this.currentPokemon.y + 1
+    && selectorY >= this.currentPokemon.y - 1;
+
+
+  }
+
+  private void doAuto(int x, int y) {
+    this.currentPokemon.doAuto(x, y, map[x][y]);
+
+
+  }
+
   
 
 }

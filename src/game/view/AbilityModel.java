@@ -12,6 +12,7 @@ public class AbilityModel {
   private int hp;
   private int maxHP;
   private int movementPoints;
+  private int autoPoints;
   private final String location = "src/game/assets/icons/";
 
   public AbilityModel(String name, int hp, int maxHP) {
@@ -20,8 +21,10 @@ public class AbilityModel {
     this.maxHP = maxHP;
   }
 
+
+
   //Draws the main ability panel
-  public void draw(Graphics g) {
+  public void draw(Graphics g, String mode) {
 
     BufferedImage currentIcon;
 
@@ -69,12 +72,17 @@ public class AbilityModel {
         g.drawString("Move: " + this.movementPoints, 134, 592);
         g.drawString("Button: M", 134, 611);
 
-        g.drawString("Auto: " + this.movementPoints, 194, 592);
+        g.drawString("Auto: " + this.autoPoints, 194, 592);
         g.drawString("Button: X", 194, 611);
 
-        g.drawString("End Turn", 254, 592);
-        g.drawString("Space", 254, 611);
         
+        if (mode == "Waiting" || mode == "Moving") {
+          g.drawString("End Turn", 254, 592);
+        }
+        else {
+          g.drawString("Select", 254, 592);
+        }
+        g.drawString("Space", 254, 611);
 
 
 
@@ -108,9 +116,12 @@ public class AbilityModel {
 
   }
 
-  public void updateMovementPoints(int newPointValue) {
-    this.movementPoints = newPointValue;
+  public void updatePoints(int newMovementPoints, int newAutoPoints) {
+    this.movementPoints = newMovementPoints;
+    this.autoPoints = newAutoPoints;
   }
+
+
 
 
   private void drawAbility(Graphics g, String fileLocation, String nameOfMove, String buttonToActivate, int x, int y) throws IOException {
