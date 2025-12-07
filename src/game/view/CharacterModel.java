@@ -38,7 +38,7 @@ public class CharacterModel{
             
             if (frames != null && frames.get(currentFrame) != null) {
                 g.drawImage(frames.get(currentFrame), x, y, null);
-                this.drawHealthBar(g, hp, maxMana);
+                this.drawHealthBar(g, hp, maxHP);
                 this.drawManaBar(g, mana, maxMana);
                 
             }

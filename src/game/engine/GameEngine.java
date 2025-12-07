@@ -1,7 +1,9 @@
 package game.engine;
 import javax.swing.*;
 
+import game.gamedata.PokemonData;
 import game.scenes.BattleScene;
+import game.scenes.TestingScene;
 
 import java.awt.event.*;
 
@@ -17,8 +19,14 @@ public class GameEngine implements Runnable {
 
     public GameEngine(JFrame frame) {
         this.frame = frame;
-        this.currentScene = new BattleScene();
+        Scene testScene = new TestingScene();
+        PokemonData[] party = testScene.getPlayersPokemon();
+        PokemonData[] npc = testScene.getNPCPokemon();
+        this.currentScene = testScene;
         this.changeScene(currentScene);
+
+        
+        this.changeScene(new BattleScene(party, npc));
 
     }
 

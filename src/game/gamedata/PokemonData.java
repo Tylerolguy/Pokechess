@@ -5,11 +5,13 @@ import game.view.CharacterModel;
 import game.view.JSONImporter;
 
 import java.awt.*;
+import java.io.IOException;
 
 public class PokemonData {
 
   // ---------------- Pokemon stats -----------------------
   public String name; //name
+  public int id;
   
   private int hp; //current hp value
   private int maxHP; // hp at full health
@@ -47,12 +49,12 @@ public class PokemonData {
 
 
   // ---------------- Other Components ------------
-  private JSONImporter jsonImporter = new JSONImporter();;
-
+  private JSONImporter jsonImporter;
 
 
   //Constructor
-  public PokemonData(String name, int hp, int x, int y, int speedStat, String trainer, String id, MoveData[] moves) {
+  public PokemonData(String name, int hp, int x, int y, int speedStat, String trainer, int id, MoveData[] moves) {
+    this.jsonImporter = new JSONImporter(id);
     this.name = name;
     this.hp = hp;
     this.maxHP = hp;
@@ -67,11 +69,53 @@ public class PokemonData {
     this.abilityModel = new AbilityModel(name);
     this.moves = moves;
     try {
-      this.characterModel = new CharacterModel(this.x, this.y, this.jsonImporter.loadFromJSON(id));
+      this.characterModel = new CharacterModel(this.x, this.y, this.jsonImporter.loadFramesFromJSON("000" + id));
     } catch (Exception e) {
       System.out.println("could not find file" + id);
       e.printStackTrace();
     }
+  }
+
+
+  public PokemonData(String name, int x, int y, String[] moves, int id, String trainer) throws IOException {
+
+
+    this.jsonImporter = new JSONImporter(id);
+    int[] stats = this.jsonImporter.getStats();
+
+
+    this.name = name;
+    this.x = x;
+    this.y = y;
+
+    this.hp = stats[0];
+    this.maxHP = stats[0];
+    this.attack = stats[1];
+    this.defense = stats[2];
+    this.specialAttack = stats[3];
+    this.specialDefense = stats[4];
+    this.speedStat = stats[5];
+    this.manaRecovery = stats[6];
+    this.maxMana = stats[7];
+    this.autoRange = stats[8];
+
+    this.trainer = trainer;
+
+    this.moves = new MoveData[]{new MoveData("Ember", "Special", true, 3, 2, 4)};
+
+
+    this.abilityModel = new AbilityModel(name);
+    try {
+      String s = String.valueOf(id);
+      while(s.length() < 4) {
+        s = "0" + s; 
+      }
+      this.characterModel = new CharacterModel(this.x, this.y, this.jsonImporter.loadFramesFromJSON(s));
+    } catch (Exception e) {
+      System.out.println("could not find file" + id);
+      e.printStackTrace();
+    }
+  
   }
 
 
@@ -234,6 +278,7 @@ public class PokemonData {
 
   //draws the pokemon at the current position with its health bar above it
   public void drawPokemon(Graphics g) {
+    
     this.characterModel.draw(g, this.hp, this.maxHP, this.currentMana, this.maxMana);
   }
 

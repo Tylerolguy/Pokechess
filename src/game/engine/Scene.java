@@ -5,6 +5,8 @@ import java.awt.event.KeyEvent;
 
 import javax.swing.JPanel;
 
+import game.gamedata.PokemonData;
+
 public abstract class Scene extends JPanel{
 
     @Override
@@ -18,6 +20,10 @@ public abstract class Scene extends JPanel{
     public abstract void input(KeyEvent e);
 
     public abstract void update();
+
+    public abstract PokemonData[] getPlayersPokemon();
+
+    public abstract PokemonData[] getNPCPokemon();
 
 
 

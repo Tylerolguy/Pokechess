@@ -1,0 +1,403 @@
+{
+  "pokemon": [
+
+    {
+      "name": "Bulbasaur",
+      "id": 1,
+      "stats": {
+        "hp": 15,
+        "attack": 1,
+        "defense": 1,
+        "specialAttack": 1,
+        "specialDefense": 0,
+        "speed": 15,
+        "manaGrowth": 1,
+        "manaMax": 10,
+        "attackRange": 2
+      }
+    },
+    {
+      "name": "Ivysaur",
+      "id": 2,
+      "stats": {
+        "hp": 0,
+        "attack": 0,
+        "defense": 0,
+        "specialAttack": 0,
+        "specialDefense": 0,
+        "speed": 0,
+        "manaGrowth": 0,
+        "manaMax": 0,
+        "attackRange": 0
+      }
+    },
+    {
+      "name": "Venusaur",
+      "id": 3,
+      "stats": {
+        "hp": 0,
+        "attack": 0,
+        "defense": 0,
+        "specialAttack": 0,
+        "specialDefense": 0,
+        "speed": 0,
+        "manaGrowth": 0,
+        "manaMax": 0,
+        "attackRange": 0
+      }
+    },
+    {
+      "name": "Charmander",
+      "id": 4,
+      "stats": {
+        "hp": 15,
+        "attack": 1,
+        "defense": 1,
+        "specialAttack": 3,
+        "specialDefense": 0,
+        "speed": 20,
+        "manaGrowth": 1,
+        "manaMax": 10,
+        "attackRange": 2
+      }
+    },
+    {
+      "name": "Charmeleon",
+      "id": 5,
+      "stats": {
+        "hp": 0,
+        "attack": 0,
+        "defense": 0,
+        "specialAttack": 0,
+        "specialDefense": 0,
+        "speed": 0,
+        "manaGrowth": 0,
+        "manaMax": 0,
+        "attackRange": 0
+      }
+    },
+    {
+      "name": "Charizard",
+      "id": 6,
+      "stats": {
+        "hp": 0,
+        "attack": 0,
+        "defense": 0,
+        "specialAttack": 0,
+        "specialDefense": 0,
+        "speed": 0,
+        "manaGrowth": 0,
+        "manaMax": 0,
+        "attackRange": 0
+      }
+    },
+    {
+      "name": "Squirtle",
+      "id": 7,
+      "stats": {
+        "hp": 20,
+        "attack": 1,
+        "defense": 2,
+        "specialAttack": 1,
+        "specialDefense": 1,
+        "speed": 10,
+        "manaGrowth": 1,
+        "manaMax": 10,
+        "attackRange": 2
+      }
+    },
+    {
+      "name": "Wartortle",
+      "id": 8,
+      "stats": {
+        "hp": 0,
+        "attack": 0,
+        "defense": 0,
+        "specialAttack": 0,
+        "specialDefense": 0,
+        "speed": 0,
+        "manaGrowth": 0,
+        "manaMax": 0,
+        "attackRange": 0
+      }
+    },
+    {
+      "name": "Blastoise",
+      "id": 9,
+      "stats": {
+        "hp": 0,
+        "attack": 0,
+        "defense": 0,
+        "specialAttack": 0,
+        "specialDefense": 0,
+        "speed": 0,
+        "manaGrowth": 0,
+        "manaMax": 0,
+        "attackRange": 0
+      }
+    },
+
+    {
+      "name": "Caterpie",
+      "id": 10,
+      "stats": {
+        "hp": 0,
+        "attack": 0,
+        "defense": 0,
+        "specialAttack": 0,
+        "specialDefense": 0,
+        "speed": 0,
+        "manaGrowth": 0,
+        "manaMax": 0,
+        "attackRange": 0
+      }
+    },
+    {
+      "name": "Metapod",
+      "id": 11,
+      "stats": {
+        "hp": 0,
+        "attack": 0,
+        "defense": 0,
+        "specialAttack": 0,
+        "specialDefense": 0,
+        "speed": 0,
+        "manaGrowth": 0,
+        "manaMax": 0,
+        "attackRange": 0
+      }
+    },
+    {
+      "name": "Butterfree",
+      "id": 12,
+      "stats": {
+        "hp": 0,
+        "attack": 0,
+        "defense": 0,
+        "specialAttack": 0,
+        "specialDefense": 0,
+        "speed": 0,
+        "manaGrowth": 0,
+        "manaMax": 0,
+        "attackRange": 0
+      }
+    },
+
+    {
+      "name": "Weedle",
+      "id": 13,
+      "stats": {
+        "hp": 0,
+        "attack": 0,
+        "defense": 0,
+        "specialAttack": 0,
+        "specialDefense": 0,
+        "speed": 0,
+        "manaGrowth": 0,
+        "manaMax": 0,
+        "attackRange": 0
+      }
+    },
+    {
+      "name": "Kakuna",
+      "id": 14,
+      "stats": {
+        "hp": 0,
+        "attack": 0,
+        "defense": 0,
+        "specialAttack": 0,
+        "specialDefense": 0,
+        "speed": 0,
+        "manaGrowth": 0,
+        "manaMax": 0,
+        "attackRange": 0
+      }
+    },
+    {
+      "name": "Beedrill",
+      "id": 15,
+      "stats": {
+        "hp": 0,
+        "attack": 0,
+        "defense": 0,
+        "specialAttack": 0,
+        "specialDefense": 0,
+        "speed": 0,
+        "manaGrowth": 0,
+        "manaMax": 0,
+        "attackRange": 0
+      }
+    },
+
+    {
+      "name": "Pidgey",
+      "id": 16,
+      "stats": {
+        "hp": 0,
+        "attack": 0,
+        "defense": 0,
+        "specialAttack": 0,
+        "specialDefense": 0,
+        "speed": 0,
+        "manaGrowth": 0,
+        "manaMax": 0,
+        "attackRange": 0
+      }
+    },
+    {
+      "name": "Pidgeotto",
+      "id": 17,
+      "stats": {
+        "hp": 0,
+        "attack": 0,
+        "defense": 0,
+        "specialAttack": 0,
+        "specialDefense": 0,
+        "speed": 0,
+        "manaGrowth": 0,
+        "manaMax": 0,
+        "attackRange": 0
+      }
+    },
+    {
+      "name": "Pidgeot",
+      "id": 18,
+      "stats": {
+        "hp": 0,
+        "attack": 0,
+        "defense": 0,
+        "specialAttack": 0,
+        "specialDefense": 0,
+        "speed": 0,
+        "manaGrowth": 0,
+        "manaMax": 0,
+        "attackRange": 0
+      }
+    },
+
+    {
+      "name": "Rattata",
+      "id": 19,
+      "stats": {
+        "hp": 0,
+        "attack": 0,
+        "defense": 0,
+        "specialAttack": 0,
+        "specialDefense": 0,
+        "speed": 0,
+        "manaGrowth": 0,
+        "manaMax": 0,
+        "attackRange": 0
+      }
+    },
+    {
+      "name": "Raticate",
+      "id": 20,
+      "stats": {
+        "hp": 0,
+        "attack": 0,
+        "defense": 0,
+        "specialAttack": 0,
+        "specialDefense": 0,
+        "speed": 0,
+        "manaGrowth": 0,
+        "manaMax": 0,
+        "attackRange": 0
+      }
+    },
+
+    {
+      "name": "Spearow",
+      "id": 21,
+      "stats": {
+        "hp": 0,
+        "attack": 0,
+        "defense": 0,
+        "specialAttack": 0,
+        "specialDefense": 0,
+        "speed": 0,
+        "manaGrowth": 0,
+        "manaMax": 0,
+        "attackRange": 0
+      }
+    },
+    {
+      "name": "Fearow",
+      "id": 22,
+      "stats": {
+        "hp": 0,
+        "attack": 0,
+        "defense": 0,
+        "specialAttack": 0,
+        "specialDefense": 0,
+        "speed": 0,
+        "manaGrowth": 0,
+        "manaMax": 0,
+        "attackRange": 0
+      }
+    },
+
+    {
+      "name": "Ekans",
+      "id": 23,
+      "stats": {
+        "hp": 0,
+        "attack": 0,
+        "defense": 0,
+        "specialAttack": 0,
+        "specialDefense": 0,
+        "speed": 0,
+        "manaGrowth": 0,
+        "manaMax": 0,
+        "attackRange": 0
+      }
+    },
+    {
+      "name": "Arbok",
+      "id": 24,
+      "stats": {
+        "hp": 0,
+        "attack": 0,
+        "defense": 0,
+        "specialAttack": 0,
+        "specialDefense": 0,
+        "speed": 0,
+        "manaGrowth": 0,
+        "manaMax": 0,
+        "attackRange": 0
+      }
+    },
+
+    {
+      "name": "Pikachu",
+      "id": 25,
+      "stats": {
+        "hp": 0,
+        "attack": 0,
+        "defense": 0,
+        "specialAttack": 0,
+        "specialDefense": 0,
+        "speed": 0,
+        "manaGrowth": 0,
+        "manaMax": 0,
+        "attackRange": 0
+      }
+    },
+    {
+      "name": "Raichu",
+      "id": 26,
+      "stats": {
+        "hp": 0,
+        "attack": 0,
+        "defense": 0,
+        "specialAttack": 0,
+        "specialDefense": 0,
+        "speed": 0,
+        "manaGrowth": 0,
+        "manaMax": 0,
+        "attackRange": 0
+      }
+    }
+
+  ]
+}

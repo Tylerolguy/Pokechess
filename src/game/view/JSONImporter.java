@@ -5,20 +5,27 @@ import java.io.*;
 import java.util.*;
 import java.util.List;
 import org.json.JSONObject;
+
 import org.json.JSONArray;
 
 
 public class JSONImporter {
-    private final String location = "src/game/assets/pokemonImages/";
+    private final String imageLocation = "src/game/assets/pokemonImages/";
+    private final int id;
+
+    public JSONImporter(int id) {
+        this.id = id;
+
+    }
 
 
   // Load sprites using JSON atlas
-    public List<BufferedImage> loadFromJSON(String imageFile) throws Exception {
+    public List<BufferedImage> loadFramesFromJSON(String imageFile) throws Exception {
         
-        BufferedImage sheet = ImageIO.read(new File(location + imageFile + ".png"));
+        BufferedImage sheet = ImageIO.read(new File(imageLocation + imageFile + ".png"));
 
         String jsonText = new String(java.nio.file.Files.readAllBytes(
-                java.nio.file.Paths.get(location + imageFile + ".json")
+                java.nio.file.Paths.get(imageLocation + imageFile + ".json")
         ));
 
         JSONObject root = new JSONObject(jsonText);
@@ -66,6 +73,50 @@ public class JSONImporter {
         }
 
         return result;
+    }
+
+
+    //hp
+    //attack
+    //defense
+    //specialAttack
+    //specialDefense
+    //speed
+    //manaGrowth
+    //manaMax
+    //attackRange
+
+
+
+
+    public int[] getStats() throws IOException {
+        int[] stats = new int[9];
+        String jsonText = new String(java.nio.file.Files.readAllBytes(java.nio.file.Paths.get("src/game/gameData/PokemonData.json")));
+
+        JSONObject root = new JSONObject(jsonText);
+        JSONArray allPokemon = root.getJSONArray("pokemon") ;
+        JSONObject pokemon = allPokemon.getJSONObject(this.id - 1);
+
+
+        JSONObject statBlock = pokemon.getJSONObject("stats");
+        
+
+        stats[0] = statBlock.getInt("hp");
+        stats[1] = statBlock.getInt("attack");
+        stats[2] = statBlock.getInt("defense");
+        stats[3] = statBlock.getInt("specialAttack");
+        stats[4] = statBlock.getInt("specialDefense");
+        stats[5] = statBlock.getInt("speed");
+        stats[6] = statBlock.getInt("manaGrowth");
+        stats[7] = statBlock.getInt("manaMax");
+        stats[8] = statBlock.getInt("attackRange");
+
+        
+
+
+
+
+        return stats;
     }
 
 

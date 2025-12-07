@@ -30,6 +30,8 @@ public class BattleScene extends Scene{
   private boolean playersTurn = false; //a boolean if it is the current players turn
   private ArrayList<Integer> indexOfPokemonToAct = new ArrayList<Integer>(); //the list of pokemon who have speed over 100 in order
   private int timeCounter = 0;
+  private PokemonData[] playersPokemon;
+  private PokemonData[] npcPokemon;
 
   //current selected pokemon Data
   private PokemonData currentPokemon; //the current pokemon whos turn it is
@@ -59,88 +61,74 @@ public class BattleScene extends Scene{
   private selectionState state = selectionState.WAITING;
 
 
-    public BattleScene() {
-      setPreferredSize(new Dimension(807, 630));
-    
-      //sets the map to have no current pokemon (will start with some later)
-      for (int i = 0; i < 15; i++) {
-        for (int j = 0; j < 10; j++) {
-          map[i][j] = null;
 
-        }
-      }
-      //MoveData tackle = new MoveData("tackle", "Physical", true, 1, 2, "Auto");
-      MoveData psychic = new MoveData("psychi", "Special", true, 3, 4, 2);
-      MoveData recover = new MoveData("recover", "Special", true, 4, 0, 3);
-      MoveData futureSight = new MoveData("future", "Special", true, 50, 60, 1);
-      MoveData[] moves = new MoveData[3];
-      moves[0] = psychic;
-      moves[1] = recover;
-      moves[2] = futureSight;
-      
-      
-      //testing purposes
-      PokemonData mew = new PokemonData("Mew", 10, 0, 0, 20, "player", "0151", moves); 
-      PokemonData charmander = new PokemonData("Charmander", 10, 1, 0, 20, "npc", "0004", moves); 
-      this.listOfPokemons.add( mew);
-      this.listOfPokemons.add(charmander);
-      this.map[0][0] = mew;
-      this.map[1][0] = charmander;
-
-      //loads the starting background based on what game engine gives it
-      try {
-        background = ImageIO.read(new File("src/game/assets/applewoods.png"));
-      } catch (Exception e) {
-        e.printStackTrace();
-      }
-
-    }
-
-    public BattleScene(PokemonData[] playersSetupPokemon, PokemonData[] enemySetupPokemon) {
-
-    }
+  public BattleScene(PokemonData[] playersPokemon, PokemonData[] enemyPokemon) {
+    setPreferredSize(new Dimension(807, 630));
+    this.playersPokemon = playersPokemon;
+    this.npcPokemon = enemyPokemon;
+    for (PokemonData p : this.playersPokemon) {
+      listOfPokemons.add(p);
+      map[p.x][p.y] = p;
 
   
-    ////////////////////////////////////////// Game Run Methods ////////////////////////////////////////
+
+    }
+    for (PokemonData p : this.npcPokemon) {
+      listOfPokemons.add(p);
+      map[p.x][p.y] = p;
+
+  
+
+    }
+          //loads the starting background based on what game engine gives it
+    try {
+      background = ImageIO.read(new File("src/game/assets/applewoods.png"));
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+
+  }
+
+  
+////////////////////////////////////////// Game Run Methods ////////////////////////////////////////
 
 
-    //called by game engine to start running the game
-    public void update() {
-      //update the frame number
-      frameNumber += 1;
-      if (frameNumber >= 64) {
-        frameNumber = frameNumber % 64;
-        animate = !animate;
-        if (!playersTurn) {
-          this.timeCounter = this.timeCounter % 2 + 1;
-        }
+  //called by game engine to start running the game
+  public void update() {
+    //update the frame number
+    frameNumber += 1;
+    if (frameNumber >= 64) {
+      frameNumber = frameNumber % 64;
+      animate = !animate;
+      if (!playersTurn) {
+        this.timeCounter = this.timeCounter % 2 + 1;
       }
-      
-      
-      if (timeCounter % 2 == 1){
-      //if its not the players turn, increase the speed of all the pokemon but only if no pokemon are not at 100 speed
-        if (!this.playersTurn && this.indexOfPokemonToAct.isEmpty()) {
-          this.timeCounter += 1;
-          for (PokemonData p : this.listOfPokemons) {
-            p.timePass();
-            System.out.println(p.getSpeed());
-            
-          }
-
-          // adds all pokemon that are above 100 speed to list of acting pokemon, sorted in order.
-          this.listOfPokemons.stream()
-            .filter(p -> p.canAct())
-            .sorted((a, b) -> Integer.compare(b.getSpeed(), a.getSpeed()))
-            .forEach(this::pokemonTurn);
-        }
-
-        //if pokemon have a turn, take their turn
-        if (!this.indexOfPokemonToAct.isEmpty()) {
-          this.takeTurns();
-        }
+    }
     
     
+    if (timeCounter % 2 == 1){
+    //if its not the players turn, increase the speed of all the pokemon but only if no pokemon are not at 100 speed
+      if (!this.playersTurn && this.indexOfPokemonToAct.isEmpty()) {
+        this.timeCounter += 1;
+        for (PokemonData p : this.listOfPokemons) {
+          p.timePass();
+          
+        }
+
+        // adds all pokemon that are above 100 speed to list of acting pokemon, sorted in order.
+        this.listOfPokemons.stream()
+          .filter(p -> p.canAct())
+          .sorted((a, b) -> Integer.compare(b.getSpeed(), a.getSpeed()))
+          .forEach(this::pokemonTurn);
       }
+
+      //if pokemon have a turn, take their turn
+      if (!this.indexOfPokemonToAct.isEmpty()) {
+        this.takeTurns();
+      }
+  
+  
+    }
 
     if (animate) {
       animate = !animate;
@@ -302,12 +290,12 @@ public class BattleScene extends Scene{
             case KeyEvent.VK_D: this.moveSelector(1, 0); break; //RIGHT
 
         }}
-        else {
+        else  {
           this.setState(selectionState.WAITING);
         }
      
       }
-      else {
+      else if (e.getKeyCode() == KeyEvent.VK_C) {
         this.timeCounter += 1;
       }
       
@@ -328,6 +316,7 @@ public class BattleScene extends Scene{
         }
         else {
           this.state = selectionState.WAITING;
+          this.currentMove = null;
         }
         break;
       case ESPECIAL:
@@ -336,6 +325,7 @@ public class BattleScene extends Scene{
         }
         else {
           this.state = selectionState.WAITING;
+          this.currentMove = null;
         }
         break;
       case RSPECIAL:
@@ -344,6 +334,7 @@ public class BattleScene extends Scene{
         }
         else {
           this.state = selectionState.WAITING;
+          this.currentMove = null;
         }
         break;
       default:
@@ -494,6 +485,17 @@ protected void paintComponent(Graphics g) {
     }
 
   }
+
+@Override
+public PokemonData[] getPlayersPokemon() {
+  return this.playersPokemon;
+}
+
+
+@Override
+public PokemonData[] getNPCPokemon() {
+  return this.playersPokemon;
+}
 
     
 
