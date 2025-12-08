@@ -31,10 +31,12 @@ public class BattleScene extends Scene{
   private ArrayList<PokemonData> listOfPokemons = new ArrayList<PokemonData>(); //a list of all the pokemon on the field
   private PokemonData[][] map = new PokemonData[16][10]; //a 2d array of the locations of all the pokemon/objects on the field
   private boolean playersTurn = false; //a boolean if it is the current players turn
+  private boolean npcTurn = false;
   private ArrayList<Integer> indexOfPokemonToAct = new ArrayList<Integer>(); //the list of pokemon who have speed over 100 in order
   private int timeCounter = 0;
   private PokemonData[] playersPokemon;
   private PokemonData[] npcPokemon;
+  
 
   //current selected pokemon Data
   private PokemonData currentPokemon; //the current pokemon whos turn it is
@@ -47,7 +49,8 @@ public class BattleScene extends Scene{
     QSPECIAL("QSpecial"),
     ESPECIAL("ESpecial"),
     RSPECIAL("RSpecial"),
-    WAITING("Waiting");
+    WAITING("Waiting"),
+    NPCTURN("NPC Turn");
 
     private final String name;
 
@@ -63,6 +66,7 @@ public class BattleScene extends Scene{
   //sets the default state
   private selectionState state = selectionState.WAITING;
   private boolean shift = false;
+  
 
 
 
@@ -112,7 +116,7 @@ public class BattleScene extends Scene{
     
     if (timeCounter % 2 == 1){
     //if its not the players turn, increase the speed of all the pokemon but only if no pokemon are not at 100 speed
-      if (!this.playersTurn && this.indexOfPokemonToAct.isEmpty()) {
+      if (!this.playersTurn && !this.npcTurn && this.indexOfPokemonToAct.isEmpty()) {
         this.timeCounter += 1;
         for (PokemonData p : this.listOfPokemons) {
           p.timePass();
@@ -124,6 +128,10 @@ public class BattleScene extends Scene{
           .filter(p -> p.canAct())
           .sorted((a, b) -> Integer.compare(b.getSpeed(), a.getSpeed()))
           .forEach(this::pokemonTurn);
+      }
+
+      if (this.npcTurn) {
+        this.endTurn();
       }
 
       //if pokemon have a turn, take their turn
@@ -157,18 +165,18 @@ public class BattleScene extends Scene{
     //if the pokemon belongs to a trainer, it sets players turn to true, allowing them
     //to act or gives to npc if not. also makes sure to update visuals of the current pokemon
     private void takeTurns() {
-      if (!playersTurn) {
+      if (!playersTurn && !npcTurn) {
 
         //sets the pokemon and reduces its speed, removes the pokemon from the list as well
         int currentIndex = indexOfPokemonToAct.get(0);
         this.currentPokemon = this.listOfPokemons.get(currentIndex);
-        this.currentPokemon.act();
         this.selectorModel.addSelectedPokemonLocation(this.currentPokemon.x, this.currentPokemon.y);
         this.indexOfPokemonToAct.remove(0);
 
         //determines who turn it is
         if (this.currentPokemon.trainer.equals("player")) {
           this.playersTurn = true;
+          
         }
         else {
           this.npcMove();
@@ -181,6 +189,7 @@ public class BattleScene extends Scene{
   private void endTurn() {
     this.setState(selectionState.WAITING);
     this.playersTurn = false;
+    this.npcTurn = false;
     this.currentPokemon.endTurn();
     this.currentMove = null;
     this.currentPokemon = null;
@@ -190,11 +199,10 @@ public class BattleScene extends Scene{
 
   //place holder method until the npc AI is made
   private void npcMove() {
-    this.setState(selectionState.WAITING);
-    if (!this.movePokemon(1, 0)) {
-      this.movePokemon(0, 1);
-    }
-    this.currentPokemon.endTurn();
+    System.out.println(this.currentPokemon.name);
+    this.npcTurn = true;
+    
+
   }
 
 
@@ -496,9 +504,22 @@ protected void paintComponent(Graphics g) {
 
     for (PokemonData p: this.listOfPokemons) {
       p.drawPokemon(g);
+      if (!p.canAct())
+        this.speedModel.addPokemon(g, p.name, p.getSpeed(), p.trainer == "player");
 
       
     }
+
+    if (this.currentPokemon != null ) {
+      this.speedModel.addPokemon(g, this.currentPokemon.name, 130, this.currentPokemon.trainer == "player");
+    }
+      for (int idx = indexOfPokemonToAct.size() - 1; idx >= 0; idx--) {
+          int i = indexOfPokemonToAct.get(idx);
+          PokemonData p = this.listOfPokemons.get(i);
+          this.speedModel.addPokemon(g, p.name, 100, p.trainer == "player");
+      }
+
+    this.speedModel.endOfTurn();
 
   }
 

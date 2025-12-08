@@ -26,7 +26,7 @@ public class PokemonData {
 
   private MoveData[] moves;
 
-  private int movementPoints = 15; // How much the pokemon can move this turn
+  private int movementPoints; // How much the pokemon can move this turn
   private int movementPointsTotal = 15; //how much can a pokemon move on their turn
 
   private int autoPoints = 1; // How much the pokemon can move this turn
@@ -50,32 +50,6 @@ public class PokemonData {
 
   // ---------------- Other Components ------------
   private JSONImporter jsonImporter;
-
-
-  //Constructor
-  public PokemonData(String name, int hp, int x, int y, int speedStat, String trainer, int id, MoveData[] moves) {
-    this.jsonImporter = new JSONImporter(name);
-    this.name = name;
-    this.hp = hp;
-    this.maxHP = hp;
-
-    this.speedStat = speedStat;
-
-    this.x = x;
-    this.y = y;
-
-    this.trainer = trainer;
-
-    this.abilityModel = new AbilityModel(name);
-    this.moves = moves;
-    try {
-      this.characterModel = new CharacterModel(this.x, this.y, this.jsonImporter.loadFramesFromJSON("000" + id));
-    } catch (Exception e) {
-      System.out.println("could not find file" + id);
-      e.printStackTrace();
-    }
-  }
-
 
   public PokemonData(String name, int x, int y, String[] moves, int id, String trainer) throws IOException {
 
@@ -153,12 +127,12 @@ public class PokemonData {
   public void endTurn() {
     this.movementPoints = this.movementPointsTotal;
     this.autoPoints = this.autoPointsTotal;
-  }
-
-
-  public void act() {
     this.currentSpeed -= 100;
+    // System.out.print(name + " ");
+    // System.out.println(speedStat);
   }
+
+
 
 
 

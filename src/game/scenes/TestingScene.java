@@ -27,33 +27,27 @@ public class TestingScene extends Scene{
     PokemonData pikachu;
     //charmander = new PokemonData("Charmander", 10, 0, 0, 25, "player", 4, new MoveData[]{ember});
     try {
-      charmander = new PokemonData("Charmander", 0, 5, null, 4, "player");
-      bulbasaur = new PokemonData("Bulbasaur", 0, 6, null, 1, "player");
-      squirtle = new PokemonData("Squirtle", 0, 7, null, 7, "player");
-
-      rattata = new PokemonData("Rattata", 14, 7, null, 19, "npc");
-      spearow = new PokemonData("Spearow", 14, 6, null, 21, "npc");
-      pikachu = new PokemonData("Pikachu", 14, 5, null, 25, "npc");
-
-      ember = new MoveData("Ember");
+            ember = new MoveData("Ember");
       withdraw = new MoveData("Tackle");
       poisonPowder = new MoveData("Tackle");
+      charmander = new PokemonData("Charmander", 0, 5, new String[]{"ember"}, 4, "player");
+      bulbasaur = new PokemonData("Bulbasaur", 0, 6, new String[]{"ember"}, 1, "player");
+      squirtle = new PokemonData("Squirtle", 0, 7, new String[]{"ember"}, 7, "player");
+
+      rattata = new PokemonData("Rattata", 14, 7, new String[]{"ember"}, 19, "npc");
+      spearow = new PokemonData("Spearow", 14, 6, new String[]{"ember"}, 21, "npc");
+      pikachu = new PokemonData("Pikachu", 14, 5, new String[]{"ember"}, 25, "npc");
+
+      pokemons = new PokemonData[]{charmander, squirtle, bulbasaur};
+      npcpokemons = new PokemonData[]{rattata, spearow, pikachu};
 
     } catch (IOException e) {
-      ember = new MoveData("Ember", "Special", true, 3, 2, 4);
-      withdraw = new MoveData("Withdraw", "Status", false, 3, 0, 3);
-      poisonPowder = new MoveData("Poison Powder", "Status", true, 0, 2, 5);
-      charmander = new PokemonData("Charmander", 10, 0, 0, 25, "player", 4, new MoveData[]{ember});
-      bulbasaur = new PokemonData("Bulbasaur", 10, 0, 2, 25, "player", 1, new MoveData[]{poisonPowder});
-      squirtle = new PokemonData("Squirtle", 15, 0, 1, 25, "player", 7, new MoveData[]{withdraw});
-      rattata = new PokemonData("Charmander", 10, 0, 0, 25, "player", 4, new MoveData[]{ember});
-      spearow = new PokemonData("Charmander", 10, 0, 0, 25, "player", 4, new MoveData[]{ember});
-      pikachu = new PokemonData("Charmander", 10, 0, 0, 25, "player", 4, new MoveData[]{ember});
+      pokemons = null;
+      npcpokemons = null;
       e.printStackTrace();
     }//new PokemonData("Charmander", 10, 0, 0, 25, "player", "0004", new MoveData[]{ember});
 
-    pokemons = new PokemonData[]{charmander, squirtle, bulbasaur};
-    npcpokemons = new PokemonData[]{rattata, spearow, pikachu};
+
   }
 
 
