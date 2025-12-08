@@ -59,6 +59,7 @@ public class BattleScene extends Scene{
 
   //sets the default state
   private selectionState state = selectionState.WAITING;
+  private boolean shift = false;
 
 
 
@@ -175,9 +176,12 @@ public class BattleScene extends Scene{
 
   //ends the current pokemons turn and triggers any end of turn effects for the current pokemon
   private void endTurn() {
+    this.setState(selectionState.WAITING);
     this.playersTurn = false;
     this.currentPokemon.endTurn();
-    this.setState(selectionState.WAITING);
+    this.currentMove = null;
+    this.currentPokemon = null;
+    
   }
 
 
@@ -199,6 +203,10 @@ public class BattleScene extends Scene{
   /// //handles all inputs.
   public void input(KeyEvent e) {
 
+      if (e.getKeyCode() == KeyEvent.VK_SHIFT) {
+        this.shift = !this.shift;
+      }
+
       //only allow input if its the players turn
       if (playersTurn) {
         //if no state is yet selected, determines what action the player wants to take
@@ -217,19 +225,19 @@ public class BattleScene extends Scene{
         //if the player wants to move
         else if (state == selectionState.MOVING) {
           switch (e.getKeyCode()) {
-            case KeyEvent.VK_SPACE: this.endTurn(); break;
-            case KeyEvent.VK_M: this.setState(selectionState.WAITING); break;
-            case KeyEvent.VK_X: this.setState(selectionState.AUTO); break;
-            case KeyEvent.VK_Q: this.setState(selectionState.QSPECIAL); break;
-            case KeyEvent.VK_E: this.setState(selectionState.ESPECIAL); break;
-            case KeyEvent.VK_R: this.setState(selectionState.RSPECIAL); break;
-            
-            case KeyEvent.VK_W: this.movePokemon(0, -1); break; //UP
-            case KeyEvent.VK_S: this.movePokemon(0, 1); break; //DOWN
-            case KeyEvent.VK_A: this.movePokemon(-1, 0); break; //LEFT
-            case KeyEvent.VK_D: this.movePokemon(1, 0); break; //RIGHT
-          }
-        }
+              case KeyEvent.VK_SPACE: this.endTurn(); break;
+              case KeyEvent.VK_M: this.setState(selectionState.WAITING); break;
+              case KeyEvent.VK_X: this.setState(selectionState.AUTO); break;
+              case KeyEvent.VK_Q: this.setState(selectionState.QSPECIAL); break;
+              case KeyEvent.VK_E: this.setState(selectionState.ESPECIAL); break;
+              case KeyEvent.VK_R: this.setState(selectionState.RSPECIAL); break;
+
+              case KeyEvent.VK_W: this.movePokemon(shift ? -1 : 0, -1); break;
+              case KeyEvent.VK_S: this.movePokemon(shift ?  1 : 0,  1); break;
+              case KeyEvent.VK_A: this.movePokemon(-1, shift ?  1 : 0); break;
+              case KeyEvent.VK_D: this.movePokemon( 1, shift ? -1 : 0); break;
+                }
+              }
         else if (state == selectionState.AUTO) {
           switch (e.getKeyCode()) {
             case KeyEvent.VK_SPACE: this.doAuto(this.selectorModel.selectorX, this.selectorModel.selectorY); break;
@@ -260,7 +268,6 @@ public class BattleScene extends Scene{
         }}
         else if (state == selectionState.ESPECIAL) {
           switch (e.getKeyCode()) {
-            //add method select
             case KeyEvent.VK_SPACE: this.doMove(this.selectorModel.selectorX, this.selectorModel.selectorY); break;
             case KeyEvent.VK_M: this.setState(selectionState.MOVING); break;
             case KeyEvent.VK_X: this.setState(selectionState.AUTO); break;
@@ -276,7 +283,6 @@ public class BattleScene extends Scene{
         }}
         else if (state == selectionState.RSPECIAL) {
           switch (e.getKeyCode()) {
-            //add method select
             case KeyEvent.VK_SPACE: this.doMove(this.selectorModel.selectorX, this.selectorModel.selectorY); break;
             case KeyEvent.VK_M: this.setState(selectionState.MOVING); break;
             case KeyEvent.VK_X: this.setState(selectionState.AUTO); break;
@@ -462,11 +468,16 @@ protected void paintComponent(Graphics g) {
       
         if (this.currentMove != null) {
           if (this.currentMove.tag == null || this.currentMove.tag == "Auto") {
-            this.selectorModel.drawRangeMapTargetEnemy(g, map, this.currentMove.range, true, false);
+            this.selectorModel.drawRangeMapTargetEnemy(g, map, 
+              this.currentMove,
+            this.currentPokemon.canUseSpecial(this.currentMove.cost));
             this.selectorModel.drawSingleEnemySelector(g, map[this.selectorModel.selectorX][this.selectorModel.selectorY]);
 
             }
           }
+        else if (this.state == selectionState.MOVING) {
+          this.selectorModel.drawWalkingRange(g, this.shift, this.map, this.currentPokemon.canMove());
+        }
       }
       if (this.frameNumber < 32) {
 

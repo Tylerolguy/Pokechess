@@ -12,6 +12,10 @@ public class Main extends JPanel {
     
     private static GameEngine gameEngine;
 
+    public Main() {
+        super(true);
+    }
+
     public static void main(String[] args) {
         // Create the frame
         JFrame frame = new JFrame("PokeChess");

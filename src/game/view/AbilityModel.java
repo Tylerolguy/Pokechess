@@ -6,6 +6,8 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
+import game.gamedata.MoveData;
+
 
 public class AbilityModel {
   private String pokemonName;
@@ -20,7 +22,7 @@ public class AbilityModel {
 
 
   //Draws the main ability panel
-  public void draw(Graphics g, String mode, int hp, int maxHP, int mana, int maxMana) {
+  public void draw(Graphics g, String mode, MoveData[] moves, int hp, int maxHP, int mana, int maxMana) {
 
     BufferedImage currentIcon;
 
@@ -38,35 +40,31 @@ public class AbilityModel {
 
       g.setColor(Color.PINK);
 
-        //ability rectanges
-        if (mode == "Auto") {
-         g.fillRect(192, 580, 60, 38);
-        }
-        else if (mode == "Moving") {
-          g.fillRect(132, 580, 60, 38);
-        
-        }
-        else if (mode == "QSpecial") {
-          g.fillRect(192, 517, 163, 60);
+      //ability rectanges
+      if (mode == "Auto") {
+        g.fillRect(192, 580, 60, 38);
+      }
+      else if (mode == "Moving") {
+        g.fillRect(132, 580, 60, 38);
+      
+      }
+      else if (mode == "QSpecial") {
+        g.fillRect(192, 517, 163, 60);
 
-        }
-        else if (mode == "ESpecial") {
-          g.fillRect(355, 517, 163, 60);
-        }
-        else if (mode == "RSpecial") {
-          g.fillRect(518, 517, 163, 60);
-        }
+      }
+      else if (mode == "ESpecial") {
+        g.fillRect(355, 517, 163, 60);
+      }
+      else if (mode == "RSpecial") {
+        g.fillRect(518, 517, 163, 60);
+      }
         
         
         
-        g.setColor(Color.BLACK);
-
-
-      //ability rectangle outlines and names
       g.setColor(Color.BLACK);
-      g.drawRect(192, 517, 163, 60);
-      g.drawRect(355, 517, 163, 60);
-      g.drawRect(518, 517, 163, 60);
+
+
+
 
       //stat rectangles
       g.drawRect(395, 580, 40, 18);
@@ -96,11 +94,6 @@ public class AbilityModel {
 
         
 
-        
-
-        
-
-
       if (mode == "Waiting" || mode == "Moving") {
           g.drawString("End Turn", 254, 592);
         }
@@ -111,13 +104,29 @@ public class AbilityModel {
 
       
 
-      //draws the abilites, change the if statement to be a for each ability that the pokemon has
-      if (true){
-        this.drawAbility(g, location + this.pokemonName + "Icon.png", "Wood Hammer", "Q", 207, 520);
-        this.drawAbility(g, location + this.pokemonName + "Icon.png", "Shadow Punch", "E", 370, 520);
-        this.drawAbility(g, location + this.pokemonName + "Icon.png", "Cut", "R", 533, 520);
-      }
+      //ability rectangle outlines and names
+      g.setColor(Color.BLACK);
+      
+      
+      
 
+      //draws the abilites, change the if statement to be a for each ability that the pokemon has
+      if (moves.length > 0) {
+        g.drawRect(192, 517, 163, 60);
+        this.drawAbility(g, location + this.pokemonName + "Icon.png", moves[0], "Q", 207, 520);
+      }
+      if (moves.length > 1) {
+        g.drawRect(355, 517, 163, 60);
+        this.drawAbility(g, location + this.pokemonName + "Icon.png", moves[1], "E", 370, 520);
+      }
+      if (moves.length > 2) {
+        g.drawRect(518, 517, 163, 60);
+        this.drawAbility(g, location + this.pokemonName + "Icon.png", moves[2], "R", 533, 520);
+      }
+     
+      
+
+      
 
       //Draws the health and mana bar, might be able to convert to one method if throw in colors, and location
       this.drawHealth(g, hp, maxHP);
@@ -146,16 +155,24 @@ public class AbilityModel {
 
 
 
-  private void drawAbility(Graphics g, String fileLocation, String nameOfMove, String buttonToActivate, int x, int y) throws IOException {
+  private void drawAbility(Graphics g, String fileLocation, MoveData move, String buttonToActivate, int x, int y) throws IOException {
       g.setColor(Color.BLACK);
 
       BufferedImage abilityIcon = ImageIO.read(new File(fileLocation));
       g.drawImage(abilityIcon, x, y, 50, 50, null);
       g.setFont(new Font("Arial", Font.BOLD, 12));
-      g.drawString(nameOfMove, x + 55, y + 13);
-
+      g.drawString(move.moveName, x + 55, y + 13);
       g.setFont(new Font("Arial", Font.BOLD, 12));
       g.drawString(buttonToActivate, x - 12, y + 30);
+
+
+      g.setFont(new Font("Arial", Font.BOLD, 12));
+      //damage, mana, range, damage type
+      
+      
+      g.setColor(Color.CYAN);
+      
+      g.drawString("MC: " + String.valueOf(move.cost), x + 55, y + 50);
 
   }
 

@@ -1,0 +1,24 @@
+{
+
+    "Ember": {
+      "moveCategory": "Special",
+      "targetEnemy": true,
+      "targetAlly": false,
+      "targetSelf": false,
+      "baseDamage": 40,
+      "range": 3,
+      "cost": 3,
+      "tag": ["Special"]
+    },
+    "Tackle": {
+      "moveCategory": "Physical",
+      "targetEnemy": true,
+      "targetAlly": false,
+      "targetSelf": false,
+      "baseDamage": 35,
+      "range": 1,
+      "cost": 2,
+      "tag": ["Special"]
+    }
+  
+}

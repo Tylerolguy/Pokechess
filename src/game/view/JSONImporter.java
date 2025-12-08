@@ -11,12 +11,15 @@ import org.json.JSONArray;
 
 public class JSONImporter {
     private final String imageLocation = "src/game/assets/pokemonImages/";
-    private final int id;
+    private final String name;
 
-    public JSONImporter(int id) {
-        this.id = id;
 
+
+    public JSONImporter(String name) {
+        this.name = name;
     }
+
+
 
 
   // Load sprites using JSON atlas
@@ -91,15 +94,21 @@ public class JSONImporter {
 
     public int[] getStats() throws IOException {
         int[] stats = new int[9];
-        String jsonText = new String(java.nio.file.Files.readAllBytes(java.nio.file.Paths.get("src/game/gameData/PokemonData.json")));
+
+        String jsonText = new String(
+            java.nio.file.Files.readAllBytes(
+                java.nio.file.Paths.get("src/game/gameData/PokemonData.json")
+            ));
 
         JSONObject root = new JSONObject(jsonText);
-        JSONArray allPokemon = root.getJSONArray("pokemon") ;
-        JSONObject pokemon = allPokemon.getJSONObject(this.id - 1);
 
+        // "pokemon" is now an OBJECT, not an ARRAY
+        JSONObject allPokemon = root.getJSONObject("pokemon");
+
+        // lookup by NAME (not index)
+        JSONObject pokemon = allPokemon.getJSONObject(this.name);
 
         JSONObject statBlock = pokemon.getJSONObject("stats");
-        
 
         stats[0] = statBlock.getInt("hp");
         stats[1] = statBlock.getInt("attack");
@@ -111,13 +120,71 @@ public class JSONImporter {
         stats[7] = statBlock.getInt("manaMax");
         stats[8] = statBlock.getInt("attackRange");
 
-        
-
-
-
-
         return stats;
+
     }
+
+    //needs to get the tags? if no other strings outside tags, can just convert this to a return String
+    // [0] moveCategory
+    public String[] getMoveStrings() throws IOException {
+        String jsonText = new String(java.nio.file.Files.readAllBytes(java.nio.file.Paths.get("src/game/gameData/MoveData.json")));
+
+        JSONObject root = new JSONObject(jsonText);
+        JSONObject move = root.getJSONObject(this.name);
+
+        String[] strs = new String[1];
+
+        strs[0] = move.getString("moveCategory");
+
+        return strs;
+
+    }
+
+    //returns
+    // [0] targetEnemy
+    // [1] targetAlly
+    // [2] targetSelf
+    public boolean[] getTargetMove() throws IOException {
+
+        String jsonText = new String(java.nio.file.Files.readAllBytes(java.nio.file.Paths.get("src/game/gameData/MoveData.json")));
+
+        JSONObject root = new JSONObject(jsonText);
+        JSONObject move = root.getJSONObject(this.name);
+
+        boolean[] bools = new boolean[3];
+
+        bools[0] = move.getBoolean("targetEnemy");
+        bools[1] = move.getBoolean("targetAlly");
+        bools[2] = move.getBoolean("targetSelf");
+
+        return bools;
+
+    }
+
+
+    public int[] getMoveInts() throws IOException {
+
+        String jsonText = new String(java.nio.file.Files.readAllBytes(java.nio.file.Paths.get("src/game/gameData/MoveData.json")));
+
+        JSONObject root = new JSONObject(jsonText);
+        JSONObject move = root.getJSONObject(this.name);
+
+        int[] ints = new int[3];
+
+        ints[0] = move.getInt("baseDamage");
+        ints[1] = move.getInt("range");
+        ints[2] = move.getInt("cost");
+
+        return ints;
+
+
+
+
+    }
+
+    
+
+
 
 
 

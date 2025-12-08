@@ -1,8 +1,6 @@
 {
-  "pokemon": [
-
-    {
-      "name": "Bulbasaur",
+  "pokemon": {
+    "Bulbasaur": {
       "id": 1,
       "stats": {
         "hp": 15,
@@ -16,8 +14,7 @@
         "attackRange": 2
       }
     },
-    {
-      "name": "Ivysaur",
+    "Ivysaur": {
       "id": 2,
       "stats": {
         "hp": 0,
@@ -31,8 +28,7 @@
         "attackRange": 0
       }
     },
-    {
-      "name": "Venusaur",
+    "Venusaur": {
       "id": 3,
       "stats": {
         "hp": 0,
@@ -46,8 +42,7 @@
         "attackRange": 0
       }
     },
-    {
-      "name": "Charmander",
+    "Charmander": {
       "id": 4,
       "stats": {
         "hp": 15,
@@ -61,8 +56,7 @@
         "attackRange": 2
       }
     },
-    {
-      "name": "Charmeleon",
+    "Charmeleon": {
       "id": 5,
       "stats": {
         "hp": 0,
@@ -76,8 +70,7 @@
         "attackRange": 0
       }
     },
-    {
-      "name": "Charizard",
+    "Charizard": {
       "id": 6,
       "stats": {
         "hp": 0,
@@ -91,8 +84,7 @@
         "attackRange": 0
       }
     },
-    {
-      "name": "Squirtle",
+    "Squirtle": {
       "id": 7,
       "stats": {
         "hp": 20,
@@ -106,8 +98,7 @@
         "attackRange": 2
       }
     },
-    {
-      "name": "Wartortle",
+    "Wartortle": {
       "id": 8,
       "stats": {
         "hp": 0,
@@ -121,8 +112,7 @@
         "attackRange": 0
       }
     },
-    {
-      "name": "Blastoise",
+    "Blastoise": {
       "id": 9,
       "stats": {
         "hp": 0,
@@ -136,9 +126,7 @@
         "attackRange": 0
       }
     },
-
-    {
-      "name": "Caterpie",
+    "Caterpie": {
       "id": 10,
       "stats": {
         "hp": 0,
@@ -152,8 +140,7 @@
         "attackRange": 0
       }
     },
-    {
-      "name": "Metapod",
+    "Metapod": {
       "id": 11,
       "stats": {
         "hp": 0,
@@ -167,8 +154,7 @@
         "attackRange": 0
       }
     },
-    {
-      "name": "Butterfree",
+    "Butterfree": {
       "id": 12,
       "stats": {
         "hp": 0,
@@ -182,9 +168,7 @@
         "attackRange": 0
       }
     },
-
-    {
-      "name": "Weedle",
+    "Weedle": {
       "id": 13,
       "stats": {
         "hp": 0,
@@ -198,8 +182,7 @@
         "attackRange": 0
       }
     },
-    {
-      "name": "Kakuna",
+    "Kakuna": {
       "id": 14,
       "stats": {
         "hp": 0,
@@ -213,8 +196,7 @@
         "attackRange": 0
       }
     },
-    {
-      "name": "Beedrill",
+    "Beedrill": {
       "id": 15,
       "stats": {
         "hp": 0,
@@ -228,9 +210,7 @@
         "attackRange": 0
       }
     },
-
-    {
-      "name": "Pidgey",
+    "Pidgey": {
       "id": 16,
       "stats": {
         "hp": 0,
@@ -244,8 +224,7 @@
         "attackRange": 0
       }
     },
-    {
-      "name": "Pidgeotto",
+    "Pidgeotto": {
       "id": 17,
       "stats": {
         "hp": 0,
@@ -259,8 +238,7 @@
         "attackRange": 0
       }
     },
-    {
-      "name": "Pidgeot",
+    "Pidgeot": {
       "id": 18,
       "stats": {
         "hp": 0,
@@ -274,12 +252,10 @@
         "attackRange": 0
       }
     },
-
-    {
-      "name": "Rattata",
+    "Rattata": {
       "id": 19,
       "stats": {
-        "hp": 0,
+        "hp": 10,
         "attack": 0,
         "defense": 0,
         "specialAttack": 0,
@@ -290,8 +266,7 @@
         "attackRange": 0
       }
     },
-    {
-      "name": "Raticate",
+    "Raticate": {
       "id": 20,
       "stats": {
         "hp": 0,
@@ -305,12 +280,10 @@
         "attackRange": 0
       }
     },
-
-    {
-      "name": "Spearow",
+    "Spearow": {
       "id": 21,
       "stats": {
-        "hp": 0,
+        "hp": 10,
         "attack": 0,
         "defense": 0,
         "specialAttack": 0,
@@ -321,8 +294,7 @@
         "attackRange": 0
       }
     },
-    {
-      "name": "Fearow",
+    "Fearow": {
       "id": 22,
       "stats": {
         "hp": 0,
@@ -336,12 +308,10 @@
         "attackRange": 0
       }
     },
-
-    {
-      "name": "Ekans",
+    "Ekans": {
       "id": 23,
       "stats": {
-        "hp": 0,
+        "hp": 10,
         "attack": 0,
         "defense": 0,
         "specialAttack": 0,
@@ -352,8 +322,7 @@
         "attackRange": 0
       }
     },
-    {
-      "name": "Arbok",
+    "Arbok": {
       "id": 24,
       "stats": {
         "hp": 0,
@@ -367,12 +336,10 @@
         "attackRange": 0
       }
     },
-
-    {
-      "name": "Pikachu",
+    "Pikachu": {
       "id": 25,
       "stats": {
-        "hp": 0,
+        "hp": 10,
         "attack": 0,
         "defense": 0,
         "specialAttack": 0,
@@ -383,8 +350,7 @@
         "attackRange": 0
       }
     },
-    {
-      "name": "Raichu",
+    "Raichu": {
       "id": 26,
       "stats": {
         "hp": 0,
@@ -398,6 +364,5 @@
         "attackRange": 0
       }
     }
-
-  ]
+  }
 }

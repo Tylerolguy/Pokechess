@@ -6,6 +6,7 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
+import game.gamedata.MoveData;
 import game.gamedata.PokemonData;
 
 public class SelectorModel {
@@ -62,25 +63,35 @@ public class SelectorModel {
    
   }
 
-  public void drawRangeMapTargetEnemy(Graphics g, PokemonData[][] map, int moveRange, boolean targetEnemy, boolean targetAlly) {
-    moveRange = moveRange * GRID_SIZE;
+  public void drawRangeMapTargetEnemy(Graphics g, PokemonData[][] map, MoveData move, boolean canUseMove) {
+    int moveRange = move.range * GRID_SIZE;
     for (int i = this.selectedPokemonX - moveRange; i <= this.selectedPokemonX + moveRange; i += GRID_SIZE) {
       for (int j = this.selectedPokemonY - moveRange; j <= this.selectedPokemonY + moveRange; j += GRID_SIZE) {
-
+        
       
       
       //draws whats in bound
       if(!(i < 150 || i > 15 * GRID_SIZE + 150 || j < 150 || j > 9 * GRID_SIZE + 150)) {
-        if (map[(i - 150) / GRID_SIZE][(j - 150) /GRID_SIZE] == null) {
-          g.setColor(new Color(0, 176, 240, 100)); //blue
-        }
-        else if (((map[(i - 150) / GRID_SIZE][(j - 150) /GRID_SIZE].trainer == "npc") && targetEnemy) ||
-                ((map[(i - 150) / GRID_SIZE][(j - 150) /GRID_SIZE].trainer == "player") && targetAlly)) {
+        if ((i == this.selectedPokemonX && j == this.selectedPokemonY && move.targetSelf)) {
           g.setColor(new Color(51, 204, 51, 150)); //green
         }
-        else if (((map[(i - 150) / GRID_SIZE][(j - 150) /GRID_SIZE].trainer == "npc") && !targetEnemy) ||
-                ((map[(i - 150) / GRID_SIZE][(j - 150) /GRID_SIZE].trainer == "player") && !targetAlly)){
-                g.setColor(new Color(255, 51, 51, 150)); //red
+        else if (i == this.selectedPokemonX && j == this.selectedPokemonY) {
+            g.setColor(new Color(255, 51, 51, 150)); //red
+          }
+        else {
+          if (map[(i - 150) / GRID_SIZE][(j - 150) /GRID_SIZE] == null) {
+            g.setColor(new Color(0, 176, 240, 100)); //blue
+          }
+          else if (((map[(i - 150) / GRID_SIZE][(j - 150) /GRID_SIZE].trainer == "npc") && move.targetEnemy) ||
+                  ((map[(i - 150) / GRID_SIZE][(j - 150) /GRID_SIZE].trainer == "player") && move.targetAlly)) {
+            g.setColor(new Color(51, 204, 51, 150)); //green
+          } 
+          else if (((map[(i - 150) / GRID_SIZE][(j - 150) /GRID_SIZE].trainer == "npc") && !move.targetEnemy) ||
+                  ((map[(i - 150) / GRID_SIZE][(j - 150) /GRID_SIZE].trainer == "player") && !move.targetAlly)){
+                  g.setColor(new Color(255, 51, 51, 150)); //red
+        }}
+        if (!canUseMove) {
+          g.setColor(new Color(100, 100, 150, 100));
         }
 
 
@@ -129,5 +140,38 @@ public class SelectorModel {
     this.selectorY = y;
   }
 
+  public void drawWalkingRange(Graphics g, boolean shift, PokemonData[][] map, boolean canMove) {
+    for (int i = this.selectedPokemonX - GRID_SIZE; i <= this.selectedPokemonX + GRID_SIZE; i += GRID_SIZE) {
+      for (int j = this.selectedPokemonY - GRID_SIZE; j <= this.selectedPokemonY + GRID_SIZE; j += GRID_SIZE) {
+        
+        //draws whats in bound
+        if(!(i < 150 || i > 15 * GRID_SIZE + 150 || j < 150 || j > 9 * GRID_SIZE + 150)) {
+            if ((map[(i - 150) / GRID_SIZE][(j - 150) /GRID_SIZE] == null) && canMove) {
+              g.setColor(new Color(51, 204, 51, 150)); //green
+            }
+            else {
+              g.setColor(new Color(255, 51, 51, 150)); //red
+          }
+
+          if (!shift && (Math.abs(this.selectedPokemonX - i) + Math.abs(this.selectedPokemonY - j) == 32)) {
+              g.fillRect(i, j, GRID_SIZE, GRID_SIZE);
+              g.setColor(Color.BLACK);
+              g.drawRect(i, j, GRID_SIZE, GRID_SIZE);
+          }
+          else if (shift && (Math.abs(this.selectedPokemonX - i) + Math.abs(this.selectedPokemonY - j) != 32)){
+              g.fillRect(i, j, GRID_SIZE, GRID_SIZE);
+              g.setColor(Color.BLACK);
+              g.drawRect(i, j, GRID_SIZE, GRID_SIZE);
+
+          }
+
+        }
+      }
+    
+
+    }
+
   
+  }
+
 }

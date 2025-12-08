@@ -26,8 +26,8 @@ public class PokemonData {
 
   private MoveData[] moves;
 
-  private int movementPoints = 2; // How much the pokemon can move this turn
-  private int movementPointsTotal = 2; //how much can a pokemon move on their turn
+  private int movementPoints = 15; // How much the pokemon can move this turn
+  private int movementPointsTotal = 15; //how much can a pokemon move on their turn
 
   private int autoPoints = 1; // How much the pokemon can move this turn
   private int autoPointsTotal = 1; //how much can a pokemon move on their turn
@@ -54,7 +54,7 @@ public class PokemonData {
 
   //Constructor
   public PokemonData(String name, int hp, int x, int y, int speedStat, String trainer, int id, MoveData[] moves) {
-    this.jsonImporter = new JSONImporter(id);
+    this.jsonImporter = new JSONImporter(name);
     this.name = name;
     this.hp = hp;
     this.maxHP = hp;
@@ -80,7 +80,7 @@ public class PokemonData {
   public PokemonData(String name, int x, int y, String[] moves, int id, String trainer) throws IOException {
 
 
-    this.jsonImporter = new JSONImporter(id);
+    this.jsonImporter = new JSONImporter(name);
     int[] stats = this.jsonImporter.getStats();
 
 
@@ -286,7 +286,7 @@ public class PokemonData {
   //draws the pokemon abilites, icon, and health at the bottom of the screen.
   public void drawAbilities(Graphics g, String mode) {
     this.abilityModel.updatePoints(this.movementPoints, this.autoPoints);
-    this.abilityModel.draw(g, mode, this.hp, this.maxHP, this.currentMana, this.maxMana);
+    this.abilityModel.draw(g, mode, moves, this.hp, this.maxHP, this.currentMana, this.maxMana);
 
   }
 

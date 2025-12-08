@@ -14,9 +14,9 @@ public class TestingScene extends Scene{
 
 
   public TestingScene() {
-    MoveData ember = new MoveData("Ember", "Special", true, 3, 2, 4);
-    MoveData withdraw = new MoveData("Withdraw", "Status", false, 3, 0, 3);
-    MoveData poisonPowder = new MoveData("Poison Powder", "Status", true, 0, 2, 5);
+    MoveData ember;
+    MoveData withdraw;
+    MoveData poisonPowder;
 
 
     PokemonData charmander;
@@ -35,7 +35,14 @@ public class TestingScene extends Scene{
       spearow = new PokemonData("Spearow", 14, 6, null, 21, "npc");
       pikachu = new PokemonData("Pikachu", 14, 5, null, 25, "npc");
 
+      ember = new MoveData("Ember");
+      withdraw = new MoveData("Tackle");
+      poisonPowder = new MoveData("Tackle");
+
     } catch (IOException e) {
+      ember = new MoveData("Ember", "Special", true, 3, 2, 4);
+      withdraw = new MoveData("Withdraw", "Status", false, 3, 0, 3);
+      poisonPowder = new MoveData("Poison Powder", "Status", true, 0, 2, 5);
       charmander = new PokemonData("Charmander", 10, 0, 0, 25, "player", 4, new MoveData[]{ember});
       bulbasaur = new PokemonData("Bulbasaur", 10, 0, 2, 25, "player", 1, new MoveData[]{poisonPowder});
       squirtle = new PokemonData("Squirtle", 15, 0, 1, 25, "player", 7, new MoveData[]{withdraw});
