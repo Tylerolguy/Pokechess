@@ -141,37 +141,150 @@ public class SelectorModel {
   }
 
   public void drawWalkingRange(Graphics g, boolean shift, PokemonData[][] map, boolean canMove) {
-    for (int i = this.selectedPokemonX - GRID_SIZE; i <= this.selectedPokemonX + GRID_SIZE; i += GRID_SIZE) {
-      for (int j = this.selectedPokemonY - GRID_SIZE; j <= this.selectedPokemonY + GRID_SIZE; j += GRID_SIZE) {
-        
-        //draws whats in bound
-        if(!(i < 150 || i > 15 * GRID_SIZE + 150 || j < 150 || j > 9 * GRID_SIZE + 150)) {
-            if ((map[(i - 150) / GRID_SIZE][(j - 150) /GRID_SIZE] == null) && canMove) {
-              g.setColor(new Color(51, 204, 51, 150)); //green
-            }
-            else {
-              g.setColor(new Color(255, 51, 51, 150)); //red
-          }
-
-          if (!shift && (Math.abs(this.selectedPokemonX - i) + Math.abs(this.selectedPokemonY - j) == 32)) {
-              g.fillRect(i, j, GRID_SIZE, GRID_SIZE);
-              g.setColor(Color.BLACK);
-              g.drawRect(i, j, GRID_SIZE, GRID_SIZE);
-          }
-          else if (shift && (Math.abs(this.selectedPokemonX - i) + Math.abs(this.selectedPokemonY - j) != 32)){
-              g.fillRect(i, j, GRID_SIZE, GRID_SIZE);
-              g.setColor(Color.BLACK);
-              g.drawRect(i, j, GRID_SIZE, GRID_SIZE);
-
-          }
-
-        }
+    if (shift) {
+      if (this.inBoundRelativeToPokemon(map, -1, -1) && this.emptySpot(map, -1, -1)) {
+        g.setColor(new Color(51, 204, 51, 150)); //green
+        g.fillRect(this.selectedPokemonX - GRID_SIZE, selectedPokemonY - GRID_SIZE, GRID_SIZE, GRID_SIZE);
+        g.setColor(Color.BLACK);
+        g.drawRect(this.selectedPokemonX - GRID_SIZE, selectedPokemonY - GRID_SIZE, GRID_SIZE, GRID_SIZE);
+        g.drawString("W", this.selectedPokemonX - GRID_SIZE + 10 , selectedPokemonY - GRID_SIZE + 13);
       }
-    
+      else if (this.inBoundRelativeToPokemon(map, -1, -1)){
+        g.setColor(new Color(255, 51, 51, 150)); //red
+        g.fillRect(this.selectedPokemonX - GRID_SIZE, selectedPokemonY - GRID_SIZE, GRID_SIZE, GRID_SIZE);
+        g.setColor(Color.BLACK);
+        g.drawRect(this.selectedPokemonX - GRID_SIZE, selectedPokemonY - GRID_SIZE, GRID_SIZE, GRID_SIZE);
+      }
+
+      if (this.inBoundRelativeToPokemon(map, -1, 1) && this.emptySpot(map, -1, 1)) {
+        g.setColor(new Color(51, 204, 51, 150)); //green
+        g.fillRect(this.selectedPokemonX - GRID_SIZE, selectedPokemonY + GRID_SIZE, GRID_SIZE, GRID_SIZE);
+        g.setColor(Color.BLACK);
+        g.drawRect(this.selectedPokemonX - GRID_SIZE, selectedPokemonY + GRID_SIZE, GRID_SIZE, GRID_SIZE);
+        g.drawString("A", this.selectedPokemonX - GRID_SIZE + 10 , selectedPokemonY + GRID_SIZE + 13);
+      }
+      else if (this.inBoundRelativeToPokemon(map, -1, 1)){
+        g.setColor(new Color(255, 51, 51, 150)); //red
+        g.fillRect(this.selectedPokemonX - GRID_SIZE, selectedPokemonY + GRID_SIZE, GRID_SIZE, GRID_SIZE);
+        g.setColor(Color.BLACK);
+        g.drawRect(this.selectedPokemonX - GRID_SIZE, selectedPokemonY + GRID_SIZE, GRID_SIZE, GRID_SIZE);
+      }
+
+      if (this.inBoundRelativeToPokemon(map, 1, 1) && this.emptySpot(map, 1, 1)) {
+        g.setColor(new Color(51, 204, 51, 150)); //green
+        g.fillRect(this.selectedPokemonX + GRID_SIZE, selectedPokemonY + GRID_SIZE, GRID_SIZE, GRID_SIZE);
+        g.setColor(Color.BLACK);
+        g.drawRect(this.selectedPokemonX + GRID_SIZE, selectedPokemonY + GRID_SIZE, GRID_SIZE, GRID_SIZE);
+        g.drawString("S", this.selectedPokemonX + GRID_SIZE + 10 , selectedPokemonY + GRID_SIZE + 13);
+      }
+      else if (this.inBoundRelativeToPokemon(map, 1, 1)){
+        g.setColor(new Color(255, 51, 51, 150)); //red
+        g.fillRect(this.selectedPokemonX + GRID_SIZE, selectedPokemonY + GRID_SIZE, GRID_SIZE, GRID_SIZE);
+        g.setColor(Color.BLACK);
+        g.drawRect(this.selectedPokemonX + GRID_SIZE, selectedPokemonY + GRID_SIZE, GRID_SIZE, GRID_SIZE);
+      }
+
+      if (this.inBoundRelativeToPokemon(map, 1, -1) && this.emptySpot(map, 1, -1)) {
+        g.setColor(new Color(51, 204, 51, 150)); //green
+        g.fillRect(this.selectedPokemonX + GRID_SIZE, selectedPokemonY - GRID_SIZE, GRID_SIZE, GRID_SIZE);
+        g.setColor(Color.BLACK);
+        g.drawRect(this.selectedPokemonX + GRID_SIZE, selectedPokemonY - GRID_SIZE, GRID_SIZE, GRID_SIZE);
+        g.drawString("D", this.selectedPokemonX + GRID_SIZE + 10 , selectedPokemonY - GRID_SIZE + 13);
+      }
+      else if (this.inBoundRelativeToPokemon(map, 1, -1)){
+        g.setColor(new Color(255, 51, 51, 150)); //red
+        g.fillRect(this.selectedPokemonX + GRID_SIZE, selectedPokemonY - GRID_SIZE, GRID_SIZE, GRID_SIZE);
+        g.setColor(Color.BLACK);
+        g.drawRect(this.selectedPokemonX + GRID_SIZE, selectedPokemonY - GRID_SIZE, GRID_SIZE, GRID_SIZE);
+      }
+
+
 
     }
 
+    else {
+      if (this.inBoundRelativeToPokemon(map, -1, 0) && this.emptySpot(map, -1,0)) {
+        g.setColor(new Color(51, 204, 51, 150)); //green
+        g.fillRect(this.selectedPokemonX - GRID_SIZE, selectedPokemonY, GRID_SIZE, GRID_SIZE);
+        g.setColor(Color.BLACK);
+        g.drawRect(this.selectedPokemonX - GRID_SIZE, selectedPokemonY, GRID_SIZE, GRID_SIZE);
+        g.drawString("A", this.selectedPokemonX - GRID_SIZE + 10 , selectedPokemonY + 13);
+      }
+      else if (this.inBoundRelativeToPokemon(map, -1, 0)){
+        g.setColor(new Color(255, 51, 51, 150)); //red
+        g.fillRect(this.selectedPokemonX - GRID_SIZE, selectedPokemonY, GRID_SIZE, GRID_SIZE);
+        g.setColor(Color.BLACK);
+        g.drawRect(this.selectedPokemonX - GRID_SIZE, selectedPokemonY, GRID_SIZE, GRID_SIZE);
+      }
+
+      if (this.inBoundRelativeToPokemon(map, 0, 1) && this.emptySpot(map, 0, 1)) {
+        g.setColor(new Color(51, 204, 51, 150)); //green
+        g.fillRect(this.selectedPokemonX, selectedPokemonY + GRID_SIZE, GRID_SIZE, GRID_SIZE);
+        g.setColor(Color.BLACK);
+        g.drawRect(this.selectedPokemonX, selectedPokemonY + GRID_SIZE, GRID_SIZE, GRID_SIZE);
+        g.drawString("S", this.selectedPokemonX + 10 , selectedPokemonY + GRID_SIZE + 13);
+      }
+      else if (this.inBoundRelativeToPokemon(map, 0, 1)){
+        g.setColor(new Color(255, 51, 51, 150)); //red
+        g.fillRect(this.selectedPokemonX, selectedPokemonY + GRID_SIZE, GRID_SIZE, GRID_SIZE);
+        g.setColor(Color.BLACK);
+        g.drawRect(this.selectedPokemonX, selectedPokemonY + GRID_SIZE, GRID_SIZE, GRID_SIZE);
+      }
+
+      if (this.inBoundRelativeToPokemon(map, 1, 0) && this.emptySpot(map, 1, 0)) {
+        g.setColor(new Color(51, 204, 51, 150)); //green
+        g.fillRect(this.selectedPokemonX + GRID_SIZE, selectedPokemonY, GRID_SIZE, GRID_SIZE);
+        g.setColor(Color.BLACK);
+        g.drawRect(this.selectedPokemonX + GRID_SIZE, selectedPokemonY , GRID_SIZE, GRID_SIZE);
+        g.drawString("D", this.selectedPokemonX + GRID_SIZE + 10 , selectedPokemonY + 13);
+      }
+      else if (this.inBoundRelativeToPokemon(map, 1, 0)){
+        g.setColor(new Color(255, 51, 51, 150)); //red
+        g.fillRect(this.selectedPokemonX + GRID_SIZE, selectedPokemonY, GRID_SIZE, GRID_SIZE);
+        g.setColor(Color.BLACK);
+        g.drawRect(this.selectedPokemonX + GRID_SIZE, selectedPokemonY , GRID_SIZE, GRID_SIZE);
+      }
+
+      if (this.inBoundRelativeToPokemon(map, 0, -1) && this.emptySpot(map, 0, -1)) {
+        g.setColor(new Color(51, 204, 51, 150)); //green
+        g.fillRect(this.selectedPokemonX, selectedPokemonY - GRID_SIZE, GRID_SIZE, GRID_SIZE);
+        g.setColor(Color.BLACK);
+        g.drawRect(this.selectedPokemonX, selectedPokemonY - GRID_SIZE, GRID_SIZE, GRID_SIZE);
+        g.drawString("W", this.selectedPokemonX + 10 , selectedPokemonY - GRID_SIZE + 13);
+      }
+      else if (this.inBoundRelativeToPokemon(map, 0, -1)){
+        g.setColor(new Color(255, 51, 51, 150)); //red
+        g.fillRect(this.selectedPokemonX, selectedPokemonY - GRID_SIZE, GRID_SIZE, GRID_SIZE);
+        g.setColor(Color.BLACK);
+        g.drawRect(this.selectedPokemonX, selectedPokemonY - GRID_SIZE, GRID_SIZE, GRID_SIZE);
+      }
+
+    }
+
+
   
+  }
+
+
+  public boolean emptySpot(PokemonData[][] map, int x, int y) {
+    x = (this.selectedPokemonX - 150) / GRID_SIZE + x;
+    y = (this.selectedPokemonY - 150) / GRID_SIZE +  y;
+    if (!(x < 0 || x > 15 || y < 0 || y > 9)) {
+      return map[x][y] == null;
+    }
+    else {
+      return false;
+    }
+    
+
+  }
+
+
+  public boolean inBoundRelativeToPokemon(PokemonData[][] map, int x, int y) {
+    x = (this.selectedPokemonX - 150) / GRID_SIZE + x;
+    y = (this.selectedPokemonY - 150) / GRID_SIZE + y;
+    return !(x < 0 || x > 15 || y < 0 || y > 9);
+
   }
 
 }

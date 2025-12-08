@@ -5,6 +5,7 @@ import game.engine.Scene;
 import game.gamedata.MoveData;
 import game.gamedata.PokemonData;
 import game.view.SelectorModel;
+import game.view.SpeedModel;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -15,12 +16,14 @@ import java.util.*;
 
 
 
+
 public class BattleScene extends Scene{
 
 
   //Image control stuff
   private BufferedImage background;
   private SelectorModel selectorModel = new SelectorModel();
+  private SpeedModel speedModel = new SpeedModel();
   private int frameNumber = 0; //how many "frames" have past since this battle has been loaded (not equivlant to amount of turns)
   private boolean animate = false;
 
@@ -460,6 +463,8 @@ protected void paintComponent(Graphics g) {
     super.paintComponent(g);
 
     g.drawImage(background, 0, 0, 807, 630, null);
+
+    this.speedModel.drawBar(g);
 
     if (this.currentPokemon != null) {
 
