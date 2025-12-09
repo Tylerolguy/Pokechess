@@ -138,13 +138,19 @@ public class BattleScene extends Scene{
       if (!this.pokemonToAct.isEmpty()) {
         this.takeTurns();
       }
+      
   
   
     }
-    if (this.npcTurn) {
+    
+
+    if (animate) {
+      animate = !animate;
+      for (PokemonData pokemon : this.listOfPokemons) {
+        pokemon.switchFrame();
+      }
+      if (this.npcTurn) {
         map = this.npcController.takeTurn(this.map, this.currentPokemon);
-
-
         if (this.npcController.shouldEndTurn(this.map, this.currentPokemon)){
           this.endTurn();
         }
@@ -152,12 +158,7 @@ public class BattleScene extends Scene{
         this.checkForFainted();
           
       }
-
-    if (animate) {
-      animate = !animate;
-      for (PokemonData pokemon : this.listOfPokemons) {
-        pokemon.switchFrame();
-      }
+      
       
 
     }
@@ -324,7 +325,7 @@ public class BattleScene extends Scene{
      
       }
       else if (e.getKeyCode() == KeyEvent.VK_C) {
-        this.timeCounter += 1;
+        this.frameNumber += 64;
       }
       
     }
@@ -435,6 +436,7 @@ public class BattleScene extends Scene{
   private void doAuto(int x, int y) {
     if (moveCalculator.validAutoTarget(currentMove, currentPokemon, map[x][y])) {
       this.moveCalculator.doAuto(currentMove, currentPokemon, map[x][y]);
+      this.checkForFainted();
     }
     
   }
