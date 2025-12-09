@@ -1,6 +1,7 @@
 package game.scenes;
 
 import game.engine.MoveCalculator;
+import game.engine.NPCController;
 import game.engine.Scene;
 import game.gamedata.MoveData;
 import game.gamedata.PokemonData;
@@ -32,10 +33,13 @@ public class BattleScene extends Scene{
   private PokemonData[][] map = new PokemonData[16][10]; //a 2d array of the locations of all the pokemon/objects on the field
   private boolean playersTurn = false; //a boolean if it is the current players turn
   private boolean npcTurn = false;
-  private ArrayList<Integer> indexOfPokemonToAct = new ArrayList<Integer>(); //the list of pokemon who have speed over 100 in order
+  private ArrayList<PokemonData> pokemonToAct = new ArrayList<PokemonData>(); //the list of pokemon who have speed over 100 in order
   private int timeCounter = 0;
   private PokemonData[] playersPokemon;
   private PokemonData[] npcPokemon;
+  private NPCController npcController = new NPCController();
+
+  public int gameOver = 0;
   
 
   //current selected pokemon Data
@@ -108,7 +112,7 @@ public class BattleScene extends Scene{
     if (frameNumber >= 64) {
       frameNumber = frameNumber % 64;
       animate = !animate;
-      if (!playersTurn) {
+      if (!playersTurn && !npcTurn) {
         this.timeCounter = this.timeCounter % 2 + 1;
       }
     }
@@ -116,7 +120,7 @@ public class BattleScene extends Scene{
     
     if (timeCounter % 2 == 1){
     //if its not the players turn, increase the speed of all the pokemon but only if no pokemon are not at 100 speed
-      if (!this.playersTurn && !this.npcTurn && this.indexOfPokemonToAct.isEmpty()) {
+      if (!this.playersTurn && !this.npcTurn && this.pokemonToAct.isEmpty()) {
         this.timeCounter += 1;
         for (PokemonData p : this.listOfPokemons) {
           p.timePass();
@@ -129,24 +133,33 @@ public class BattleScene extends Scene{
           .sorted((a, b) -> Integer.compare(b.getSpeed(), a.getSpeed()))
           .forEach(this::pokemonTurn);
       }
-
-      if (this.npcTurn) {
-        this.endTurn();
-      }
-
+      
       //if pokemon have a turn, take their turn
-      if (!this.indexOfPokemonToAct.isEmpty()) {
+      if (!this.pokemonToAct.isEmpty()) {
         this.takeTurns();
       }
   
   
     }
+    if (this.npcTurn) {
+        map = this.npcController.takeTurn(this.map, this.currentPokemon);
+
+
+        if (this.npcController.shouldEndTurn(this.map, this.currentPokemon)){
+          this.endTurn();
+        }
+
+        this.checkForFainted();
+          
+      }
 
     if (animate) {
       animate = !animate;
       for (PokemonData pokemon : this.listOfPokemons) {
         pokemon.switchFrame();
       }
+      
+
     }
   }
 
@@ -156,7 +169,7 @@ public class BattleScene extends Scene{
 
     //adds a index of a pokemon to list of turns (couldnt figure out the steam), 
     private void pokemonTurn(PokemonData pokemon) {
-      this.indexOfPokemonToAct.add(this.listOfPokemons.indexOf(pokemon));
+      this.pokemonToAct.add(pokemon);
     }
 
 
@@ -168,10 +181,9 @@ public class BattleScene extends Scene{
       if (!playersTurn && !npcTurn) {
 
         //sets the pokemon and reduces its speed, removes the pokemon from the list as well
-        int currentIndex = indexOfPokemonToAct.get(0);
-        this.currentPokemon = this.listOfPokemons.get(currentIndex);
+        this.currentPokemon = pokemonToAct.get(0);
         this.selectorModel.addSelectedPokemonLocation(this.currentPokemon.x, this.currentPokemon.y);
-        this.indexOfPokemonToAct.remove(0);
+        this.pokemonToAct.remove(0);
 
         //determines who turn it is
         if (this.currentPokemon.trainer.equals("player")) {
@@ -199,7 +211,6 @@ public class BattleScene extends Scene{
 
   //place holder method until the npc AI is made
   private void npcMove() {
-    System.out.println(this.currentPokemon.name);
     this.npcTurn = true;
     
 
@@ -422,7 +433,7 @@ public class BattleScene extends Scene{
   
   //change to use move
   private void doAuto(int x, int y) {
-    if (moveCalculator.validTarget(currentMove, currentPokemon, map[x][y])) {
+    if (moveCalculator.validAutoTarget(currentMove, currentPokemon, map[x][y])) {
       this.moveCalculator.doAuto(currentMove, currentPokemon, map[x][y]);
     }
     
@@ -432,23 +443,62 @@ public class BattleScene extends Scene{
   private void doMove(int x, int y) {
     if (moveCalculator.validSpecialTarget(currentMove, currentPokemon, map[x][y])) {
       this.moveCalculator.doMove(currentMove, currentPokemon, map[x][y]);
-        for (int i = this.listOfPokemons.size() - 1; i >= 0; i--) {
-            if (listOfPokemons.get(i).isFainted()) {
-                this.faint(listOfPokemons.get(i));
-            }
-}
+       this.checkForFainted();
     }
 
 
   }
 
 
+  private void checkForFainted() {
+    for (int i = this.listOfPokemons.size() - 1; i >= 0; i--) {
+            if (listOfPokemons.get(i).isFainted()) {
+                this.faint(listOfPokemons.get(i));
+                this.isGameOver();
+            }
+        }
+  }
+
+
+
+
+
 
 
   private void faint(PokemonData p) {
-    this.indexOfPokemonToAct.remove(Integer.valueOf(this.listOfPokemons.indexOf(p)));
+
     this.listOfPokemons.remove(p);
+    this.pokemonToAct.remove(p);
+    
     map[p.x][p.y] = null;
+  }
+
+
+
+  private void isGameOver() {
+    boolean npcAlive = false;
+    boolean playerAlive = false;
+
+
+    for (int i = 0; i < map.length; i++) {
+      for (int j = 0; j < map[i].length; j++) {
+        if (map[i][j] != null && map[i][j].trainer == "player") {
+          playerAlive = true;
+        }
+        else if (map[i][j] != null) {
+          npcAlive = true;
+        } 
+      }
+    }
+
+    if (!playerAlive) {
+    }
+    else if (!npcAlive) {
+      this.gameOver = 2;
+    }
+  
+
+
   }
 
 
@@ -502,8 +552,9 @@ protected void paintComponent(Graphics g) {
     }
     
 
-    for (PokemonData p: this.listOfPokemons) {
+    for (PokemonData p : new ArrayList<>(this.listOfPokemons)) {
       p.drawPokemon(g);
+    
       if (!p.canAct())
         this.speedModel.addPokemon(g, p.name, p.getSpeed(), p.trainer == "player");
 
@@ -513,9 +564,9 @@ protected void paintComponent(Graphics g) {
     if (this.currentPokemon != null ) {
       this.speedModel.addPokemon(g, this.currentPokemon.name, 130, this.currentPokemon.trainer == "player");
     }
-      for (int idx = indexOfPokemonToAct.size() - 1; idx >= 0; idx--) {
-          int i = indexOfPokemonToAct.get(idx);
-          PokemonData p = this.listOfPokemons.get(i);
+    for (int idx = pokemonToAct.size() - 1; idx >= 0; idx--) {
+          
+          PokemonData p = this.pokemonToAct.get(idx);
           this.speedModel.addPokemon(g, p.name, 100, p.trainer == "player");
       }
 

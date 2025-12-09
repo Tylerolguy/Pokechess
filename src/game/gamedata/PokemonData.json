@@ -3,7 +3,7 @@
     "Bulbasaur": {
       "id": 1,
       "stats": {
-        "hp": 15,
+        "hp": 1,
         "attack": 1,
         "defense": 1,
         "specialAttack": 1,
@@ -48,7 +48,7 @@
     "Charmander": {
       "id": 4,
       "stats": {
-        "hp": 15,
+        "hp": 1,
         "attack": 1,
         "defense": 1,
         "specialAttack": 3,
@@ -372,7 +372,7 @@
         "movementPoints": 6,
         "manaGrowth": 0,
         "manaMax": 0,
-        "attackRange": 2
+        "attackRange": 7
       }
     },
     "Raichu": {

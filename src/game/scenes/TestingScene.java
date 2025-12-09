@@ -5,18 +5,16 @@ import java.awt.event.KeyEvent;
 import java.io.IOException;
 
 import game.engine.Scene;
-import game.gamedata.MoveData;
 import game.gamedata.PokemonData;
 
 public class TestingScene extends Scene{
   PokemonData[] pokemons;
   PokemonData[] npcpokemons;
 
+  public int gameOver = 0;
+
 
   public TestingScene() {
-    MoveData ember;
-    MoveData withdraw;
-    MoveData poisonPowder;
 
 
     PokemonData charmander;
@@ -27,9 +25,9 @@ public class TestingScene extends Scene{
     PokemonData pikachu;
     //charmander = new PokemonData("Charmander", 10, 0, 0, 25, "player", 4, new MoveData[]{ember});
     try {
-            ember = new MoveData("Ember");
-      withdraw = new MoveData("Tackle");
-      poisonPowder = new MoveData("Tackle");
+      // ember = new MoveData("Ember");
+      // withdraw = new MoveData("Tackle");
+      // poisonPowder = new MoveData("Tackle");
       charmander = new PokemonData("Charmander", 0, 5, new String[]{"ember"}, 4, "player");
       bulbasaur = new PokemonData("Bulbasaur", 0, 6, new String[]{"ember"}, 1, "player");
       squirtle = new PokemonData("Squirtle", 0, 7, new String[]{"ember"}, 7, "player");

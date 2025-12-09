@@ -16,7 +16,7 @@ import java.awt.event.*;
 public class GameEngine implements Runnable {
     private JFrame frame;
     private Scene currentScene;
-
+    private int runningGame = 0;
     public GameEngine(JFrame frame) {
         this.frame = frame;
         Scene testScene = new TestingScene();
@@ -36,7 +36,8 @@ public class GameEngine implements Runnable {
     }
 
     public void run() {
-        while (true) {
+        
+        while (runningGame == 0) {
             this.currentScene.update();  
             this.currentScene.repaint();
 

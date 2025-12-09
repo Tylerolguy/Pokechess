@@ -93,7 +93,7 @@ public class JSONImporter {
 
 
     public int[] getStats() throws IOException {
-        int[] stats = new int[9];
+        int[] stats = new int[10];
 
         String jsonText = new String(
             java.nio.file.Files.readAllBytes(
@@ -119,6 +119,7 @@ public class JSONImporter {
         stats[6] = statBlock.getInt("manaGrowth");
         stats[7] = statBlock.getInt("manaMax");
         stats[8] = statBlock.getInt("attackRange");
+        stats[9] = statBlock.getInt("movementPoints");
 
         return stats;
 

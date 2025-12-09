@@ -72,6 +72,8 @@ public class PokemonData {
     this.manaRecovery = stats[6];
     this.maxMana = stats[7];
     this.autoRange = stats[8];
+    this.movementPointsTotal = stats[9];
+    this.movementPoints = this.movementPointsTotal;
 
     this.trainer = trainer;
 
@@ -205,6 +207,9 @@ public class PokemonData {
     return this.hp <= 0;
   }
 
+  public MoveData getAuto() {
+    return new MoveData("Auto", "Physical", true, 1, this.autoRange, 0);
+  }
 
 
 

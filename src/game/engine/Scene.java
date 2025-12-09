@@ -9,6 +9,8 @@ import game.gamedata.PokemonData;
 
 public abstract class Scene extends JPanel{
 
+    public int gameOver;
+
     @Override
     protected void paintComponent(Graphics g) {
       super.paintComponent(g);
