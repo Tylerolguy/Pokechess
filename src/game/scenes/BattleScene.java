@@ -243,8 +243,6 @@ public class BattleScene extends Scene{
             case KeyEvent.VK_E: this.setState(selectionState.ESPECIAL); break;
             case KeyEvent.VK_R: this.setState(selectionState.RSPECIAL); break;
           }}
-
-
         //if the player wants to move
         else if (state == selectionState.MOVING) {
           switch (e.getKeyCode()) {
@@ -329,14 +327,12 @@ public class BattleScene extends Scene{
       }
       
     }
-
-
   private void setState(selectionState state) {
     this.selectorModel.setSelector(this.currentPokemon.x, this.currentPokemon.y);
     this.state = state;
     switch (state) {
       case AUTO: 
-      this.currentMove = new MoveData("Auto", "Physical", true, 1, this.currentPokemon.getAutoRange(),0, "Auto");
+      this.currentMove = currentPokemon.getAuto();
       break;
     
       case QSPECIAL:
@@ -530,16 +526,20 @@ protected void paintComponent(Graphics g) {
 
       if (currentPokemon.trainer == "player") {
         this.currentPokemon.drawAbilities(g, state.getState());
+        
       
         if (this.currentMove != null) {
-          if (this.currentMove.tag == null || this.currentMove.tag == "Auto") {
+          //if (this.currentMove.tag == null || this.currentMove.tag == "Auto") {
             this.selectorModel.drawRangeMapTargetEnemy(g, map, 
               this.currentMove,
             this.currentPokemon.canUseSpecial(this.currentMove.cost));
             this.selectorModel.drawSingleEnemySelector(g, map[this.selectorModel.selectorX][this.selectorModel.selectorY]);
 
+
+
+
             }
-          }
+          //}
         else if (this.state == selectionState.MOVING) {
           this.selectorModel.drawWalkingRange(g, this.shift, this.map, this.currentPokemon.canMove());
         }

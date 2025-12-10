@@ -6,7 +6,7 @@
       "targetAlly": false,
       "targetSelf": false,
       "baseDamage": 40,
-      "range": 3,
+      "range": 5,
       "cost": 3,
       "tag": ["Special"]
     },

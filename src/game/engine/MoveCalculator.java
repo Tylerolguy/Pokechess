@@ -41,7 +41,7 @@ public class MoveCalculator {
 
   public boolean validSpecialTarget(MoveData move, PokemonData user, PokemonData target){
     if (user.canUseSpecial(move.cost) && target != null) {
-      if ( move.targetEnemy && (user.trainer != target.trainer)){
+      if ( move.targetEnemy && (user.trainer != target.trainer) && this.inRange(move, user, target)){
         return true;
       }
       else {

@@ -51,7 +51,7 @@ public class PokemonData {
   // ---------------- Other Components ------------
   private JSONImporter jsonImporter;
 
-  public PokemonData(String name, int x, int y, String[] moves, int id, String trainer) throws IOException {
+  public PokemonData(String name, int x, int y, String[] moveNames, int id, String trainer) throws IOException {
 
 
     this.jsonImporter = new JSONImporter(name);
@@ -76,8 +76,12 @@ public class PokemonData {
     this.movementPoints = this.movementPointsTotal;
 
     this.trainer = trainer;
+    this.moves = new MoveData[moveNames.length];
 
-    this.moves = new MoveData[]{new MoveData("Ember", "Special", true, 3, 2, 4)};
+    for (int i = 0 ; i < this.moves.length; i++) {
+      this.moves[i] = new MoveData(moveNames[i]);
+      
+    }
 
 
     this.abilityModel = new AbilityModel(name);
@@ -130,8 +134,6 @@ public class PokemonData {
     this.movementPoints = this.movementPointsTotal;
     this.autoPoints = this.autoPointsTotal;
     this.currentSpeed -= 100;
-    // System.out.print(name + " ");
-    // System.out.println(speedStat);
   }
 
 
@@ -208,7 +210,7 @@ public class PokemonData {
   }
 
   public MoveData getAuto() {
-    return new MoveData("Auto", "Physical", true, 1, this.autoRange, 0);
+    return new MoveData("Auto", "Physical", true, 1, this.autoRange, 0, "Auto");
   }
 
 

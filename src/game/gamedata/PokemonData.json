@@ -3,7 +3,7 @@
     "Bulbasaur": {
       "id": 1,
       "stats": {
-        "hp": 1,
+        "hp": 15,
         "attack": 1,
         "defense": 1,
         "specialAttack": 1,
@@ -48,7 +48,7 @@
     "Charmander": {
       "id": 4,
       "stats": {
-        "hp": 1,
+        "hp": 15,
         "attack": 1,
         "defense": 1,
         "specialAttack": 3,
@@ -370,8 +370,8 @@
         "specialDefense": 0,
         "speed": 25,
         "movementPoints": 6,
-        "manaGrowth": 0,
-        "manaMax": 0,
+        "manaGrowth": 1,
+        "manaMax": 10,
         "attackRange": 7
       }
     },

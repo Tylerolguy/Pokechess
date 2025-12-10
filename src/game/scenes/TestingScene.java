@@ -28,13 +28,13 @@ public class TestingScene extends Scene{
       // ember = new MoveData("Ember");
       // withdraw = new MoveData("Tackle");
       // poisonPowder = new MoveData("Tackle");
-      charmander = new PokemonData("Charmander", 0, 5, new String[]{"ember"}, 4, "player");
-      bulbasaur = new PokemonData("Bulbasaur", 0, 6, new String[]{"ember"}, 1, "player");
-      squirtle = new PokemonData("Squirtle", 0, 7, new String[]{"ember"}, 7, "player");
+      charmander = new PokemonData("Charmander", 0, 5, new String[]{"Ember"}, 4, "player");
+      bulbasaur = new PokemonData("Bulbasaur", 0, 6, new String[]{"Ember"}, 1, "player");
+      squirtle = new PokemonData("Squirtle", 0, 7, new String[]{"Ember"}, 7, "player");
 
-      rattata = new PokemonData("Rattata", 14, 7, new String[]{"ember"}, 19, "npc");
-      spearow = new PokemonData("Spearow", 14, 6, new String[]{"ember"}, 21, "npc");
-      pikachu = new PokemonData("Pikachu", 14, 5, new String[]{"ember"}, 25, "npc");
+      rattata = new PokemonData("Rattata", 14, 7, new String[]{"Ember"}, 19, "npc");
+      spearow = new PokemonData("Spearow", 14, 6, new String[]{"Ember"}, 21, "npc");
+      pikachu = new PokemonData("Pikachu", 14, 5, new String[]{"Ember"}, 25, "npc");
 
       pokemons = new PokemonData[]{charmander, squirtle, bulbasaur};
       npcpokemons = new PokemonData[]{rattata, spearow, pikachu};
